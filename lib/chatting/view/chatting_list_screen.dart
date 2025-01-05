@@ -97,11 +97,4 @@ class ChattingListScreen extends ConsumerWidget {
       ),
     );
   }
-
-  void _navigateToChatRoom(BuildContext context, ChatRoomEntity room) {
-    context.push(
-      '/chatting/${room.chatRoomId}',
-      extra: {'targetId': room.orphanageUser.orphanageUserId, 'userId':room.user.userId},
-    );
-  }
 }
