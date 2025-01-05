@@ -3,6 +3,7 @@
 .packages
 .flutter-plugins
 .flutter-plugins-dependencies
+.packages
 
 # Build
 /build/
@@ -33,3 +34,7 @@ pubspec.lock
 
 # Miscellaneous
 *.lock
+
+# Android Gradle 관련 파일
+/android/.gradle/
+/android/app/build/
