@@ -36,8 +36,8 @@ class OrphanageHomeScreen extends TabScreen {
                     children: [
                       const SizedBox(height: kPaddingLargeSize),
                       CustomImageCategoryCard(
-                        title: "보육원 관리",
-                        subtitle: "보육원의 예약 및 후원 정보를 관리하세요",
+                        title: "Orphanage Management",
+                        subtitle: "Manage orphanage reservations and donation information",
                         imagePath: "assets/image/pin.png", // 아이콘 경로
                         backgroundColor: Colors.green.withOpacity(0.65), // 배경색
                         textColor: Colors.white,
@@ -47,8 +47,8 @@ class OrphanageHomeScreen extends TabScreen {
                       ),
                       const SizedBox(height: kPaddingMiddleSize),
                       CustomImageCategoryCard(
-                        title: "후원 인증글 관리",
-                        subtitle: "보육원의 후원 인증글을 관리하세요",
+                        title: "Donation Certification Management",
+                        subtitle: "Manage donation certification posts of the orphanage",
                         imagePath: "assets/image/giving.png", // 아이콘 경로
                         backgroundColor: Colors.blue.withOpacity(0.65), // 배경색
                         textColor: Colors.white,
@@ -58,8 +58,8 @@ class OrphanageHomeScreen extends TabScreen {
                       ),
                       const SizedBox(height: kPaddingMiddleSize),
                       CustomImageCategoryCard(
-                        title: "방문 신청 관리",
-                        subtitle: "보육원 방문 신청 내역을 관리하세요",
+                        title: "Visit Request Management",
+                        subtitle: "Manage visit request history for the orphanage",
                         imagePath: "assets/image/calendar.png", // 아이콘 경로
                         backgroundColor: Colors.orange.withOpacity(0.65), // 배경색
                         textColor: Colors.white,
@@ -71,7 +71,7 @@ class OrphanageHomeScreen extends TabScreen {
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          "앱 특징",
+                          "App Features",
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
@@ -95,15 +95,15 @@ class OrphanageHomeScreen extends TabScreen {
                           child: Column(
                             children: [
                               CustomDescriptionCard(
-                                title: "효율적인 예약 관리",
-                                description: "보육원 예약 내역을 간편하게 확인하고 관리하세요",
+                                title: "Efficient Reservation Management",
+                                description: "Easily view and manage orphanage reservation history",
                                 onTap: () {
                                   print("첫 번째 설명 클릭됨");
                                 },
                               ),
                               CustomDescriptionCard(
-                                title: "투명한 후원 인증",
-                                description: "투명하게 후원 인증을 관리하고 사용자와 소통하세요",
+                                title: "Transparent Donation Certification",
+                                description: "Manage donation certifications transparently and communicate with users",
                                 onTap: () {
                                   print("두 번째 설명 클릭됨");
                                 },
