@@ -55,12 +55,12 @@ dependencies:
 
   # Google Map
   google_maps_flutter: ^2.2.1
+  flutter_google_places: ^0.3.0
   google_maps_flutter_android: ^2.5.1
   google_maps_flutter_platform_interface: ^2.4.1
   google_maps_webservice: ^0.0.19
   google_geocoding: ^0.2.0
   geocoding: ^2.0.5
-  google_api_headers: ^3.2.0
 
   # Percent indicator 추가
   percent_indicator: ^4.2.3

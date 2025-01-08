@@ -38,3 +38,4 @@ pubspec.lock
 # Android Gradle 관련 파일
 /android/.gradle/
 /android/app/build/
+android/local.properties
