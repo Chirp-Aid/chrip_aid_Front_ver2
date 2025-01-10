@@ -78,9 +78,7 @@ class SocketService {
       return;
     }
 
-    socket!.emitWithAck('createRoom', {'user_id': userId, 'orphanage_user_id': orphanageUserId}, ack: (response) {
-      print('Room created successfully: $response');
-    });
+    socket!.emit('createRoom', {'user_id': userId, 'orphanage_user_id': orphanageUserId});
   }
 
   // 메시지 전송
@@ -90,13 +88,11 @@ class SocketService {
       return;
     }
 
-    socket!.emitWithAck('sendMessage', {
+    socket!.emit('sendMessage', {
       'sender': sender,
       'type': type,
       'join_room': joinRoom,
       'content': content,
-    }, ack: (response) {
-      print('Send Messages successfully : $response');
     });
   }
 
@@ -113,20 +109,26 @@ class SocketService {
 
   // 채팅방 입장
   void joinRoom(String roomId) {
-    if (socket == null || !socket!.connected) {
+    if (socket == null) {
+      print("Socket is not initialized. Unable to join room.");
+      return;
+    }
+
+    if (!socket!.connected) {
       print("Socket is not connected. Unable to join room.");
       return;
     }
 
-    socket!.emitWithAck('joinRoom', {'roomId': roomId}, ack: (response) {
-      print('Join Successfully : $response');
-    });
+    print("Attempting to join room: $roomId");
 
-    socket!.off('roomMessages'); // 이전 roomMessages 리스너 제거
+    socket!.emit('joinRoom', {'roomId': roomId});
+    socket!.off('roomMessages');
+
     socket!.on('roomMessages', (data) {
-      print('Joined room and received messages: $data');
+      print('Received messages from room $roomId: $data');
     });
   }
+
 
   // 채팅방 퇴장
   void leaveRoom(String roomId) {
