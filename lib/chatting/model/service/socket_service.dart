@@ -1,9 +1,10 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'dart:async';
 
 class SocketService {
   IO.Socket? socket;
 
-  SocketService(String userId){
+  Future<void> initializeSocket(String userId) async {
     print('userId in initializeSocket : $userId');
 
     if (socket != null && socket!.connected) {
@@ -26,7 +27,29 @@ class SocketService {
           .build(),
     );
 
+    final completer = Completer<void>();
+
+    // 연결 이벤트 등록
+    socket!.onConnect((_) {
+      print('Connected to socket');
+      completer.complete();
+    });
+
+    socket!.onConnectError((error) {
+      print('Connection error: $error');
+      completer.completeError(error);
+    });
+
+    socket!.on('connect_timeout', (_) {
+      print('Connection timed out');
+      completer.completeError('Connection timed out');
+    });
+
     socket!.connect();
+
+    print('Waiting for socket connection...');
+    await completer.future; // 연결 완료 대기
+    print('Socket connection established!');
 
     _setupSocketListeners();
   }
@@ -37,10 +60,6 @@ class SocketService {
       return;
     }
 
-    socket!.onConnect((_) {
-      print('Connected to socket');
-    });
-
     socket!.onDisconnect((reason) {
       print('Disconnected from socket: $reason');
     });
@@ -49,9 +68,7 @@ class SocketService {
       print('Connection error: $error');
     });
 
-    socket!.on('connect_timeout', (_) {
-      print('Connection timed out');
-    });
+    // Add other event listeners as needed
   }
 
   // 채팅방 생성
@@ -78,8 +95,8 @@ class SocketService {
       'type': type,
       'join_room': joinRoom,
       'content': content,
-    }, ack: (response){
-      print('Send Messages sucessfully : $response');
+    }, ack: (response) {
+      print('Send Messages successfully : $response');
     });
   }
 
@@ -101,7 +118,7 @@ class SocketService {
       return;
     }
 
-    socket!.emitWithAck('joinRoom', {'roomId': roomId}, ack: (response){
+    socket!.emitWithAck('joinRoom', {'roomId': roomId}, ack: (response) {
       print('Join Successfully : $response');
     });
 

@@ -31,23 +31,28 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
   void initState() {
     super.initState();
 
-    // SocketService 초기화
-    _socketService = SocketService(widget.userId);
+    _initializeSocketAndJoinRoom();
+  }
 
-    // print("Initializing ChattingMessageScreen");
-    // print("ChatRoomId: ${widget.chatRoomId}, TargetId: ${widget.targetId}");
-    //
-    // _socketService.joinRoom(widget.chatRoomId);
-    // print("Joined room: ${widget.chatRoomId}");
-    // _initializeSocketListeners();
-    //
-    // _initializeUserDetails();
+  Future<void> _initializeSocketAndJoinRoom() async {
+    _socketService = SocketService();
+
+    // 소켓 연결 완료 대기
+    await _socketService.initializeSocket(widget.userId);
+    print("Socket initialized successfully!");
+
+    // 소켓 연결 후 채팅방 입장
+    _socketService.joinRoom(widget.chatRoomId);
+
+    // 이벤트 리스너 등록
+    _initializeSocketListeners();
+
+    _initializeUserDetails();
   }
 
   Future<void> _initializeUserDetails() async {
     print("Fetching user details...");
     try {
-
       setState(() {
         userName = widget.userName;
       });
@@ -101,7 +106,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
           _BottomInputField(
             chatRoomId: widget.chatRoomId,
             socketService: _socketService,
-            userName: userName, // userName만 전달
+            userName: userName,
           ),
         ],
       ),
@@ -127,6 +132,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     );
   }
 }
+
 
 class _BottomInputField extends StatefulWidget {
   final String chatRoomId;
