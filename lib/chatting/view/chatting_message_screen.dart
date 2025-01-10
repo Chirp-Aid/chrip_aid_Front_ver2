@@ -38,9 +38,9 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     print("Initializing ChattingMessageScreen");
     print("ChatRoomId: ${widget.chatRoomId}, TargetId: ${widget.targetId}");
 
-    _initializeSocketListeners();
     _socketService.joinRoom(widget.chatRoomId);
     print("Joined room: ${widget.chatRoomId}");
+    _initializeSocketListeners();
 
     _initializeUserDetails();
   }
