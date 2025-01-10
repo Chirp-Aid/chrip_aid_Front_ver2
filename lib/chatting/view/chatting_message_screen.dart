@@ -32,17 +32,16 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     super.initState();
 
     // SocketService 초기화
-    _socketService = SocketService();
-    _socketService.initializeSocket(widget.userId);
+    _socketService = SocketService(widget.userId);
 
-    print("Initializing ChattingMessageScreen");
-    print("ChatRoomId: ${widget.chatRoomId}, TargetId: ${widget.targetId}");
-
-    _socketService.joinRoom(widget.chatRoomId);
-    print("Joined room: ${widget.chatRoomId}");
-    _initializeSocketListeners();
-
-    _initializeUserDetails();
+    // print("Initializing ChattingMessageScreen");
+    // print("ChatRoomId: ${widget.chatRoomId}, TargetId: ${widget.targetId}");
+    //
+    // _socketService.joinRoom(widget.chatRoomId);
+    // print("Joined room: ${widget.chatRoomId}");
+    // _initializeSocketListeners();
+    //
+    // _initializeUserDetails();
   }
 
   Future<void> _initializeUserDetails() async {

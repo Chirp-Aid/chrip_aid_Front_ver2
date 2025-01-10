@@ -3,7 +3,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class SocketService {
   IO.Socket? socket;
 
-  void initializeSocket(String userId) {
+  SocketService(String userId){
     print('userId in initializeSocket : $userId');
 
     if (socket != null && socket!.connected) {
