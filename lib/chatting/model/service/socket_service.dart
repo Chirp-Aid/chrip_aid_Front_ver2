@@ -21,6 +21,8 @@ class SocketService {
           .setTransports(['websocket'])
           .disableAutoConnect()
           .setExtraHeaders(headers)
+          .setReconnectionAttempts(5)
+          .setReconnectionDelay(2000)
           .build(),
     );
 
@@ -50,14 +52,6 @@ class SocketService {
     socket!.on('connect_timeout', (_) {
       print('Connection timed out');
     });
-
-    socket!.on('newMessage', (data) {
-      print('Received new message: $data');
-    });
-
-    socket!.on('roomMessages', (data) {
-      print('Received room messages: $data');
-    });
   }
 
   // 채팅방 생성
@@ -67,9 +61,8 @@ class SocketService {
       return;
     }
 
-    socket!.emit('createRoom', {
-      'user_id': userId,
-      'orphanage_user_id': orphanageUserId,
+    socket!.emitWithAck('createRoom', {'user_id': userId, 'orphanage_user_id': orphanageUserId}, ack: (response) {
+      print('Room created successfully: $response');
     });
   }
 
@@ -80,11 +73,13 @@ class SocketService {
       return;
     }
 
-    socket!.emit('sendMessage', {
+    socket!.emitWithAck('sendMessage', {
       'sender': sender,
       'type': type,
       'join_room': joinRoom,
       'content': content,
+    }, ack: (response){
+      print('Send Messages sucessfully : $response');
     });
   }
 
@@ -106,7 +101,9 @@ class SocketService {
       return;
     }
 
-    socket!.emit('joinRoom', {'roomId': roomId});
+    socket!.emitWithAck('joinRoom', {'roomId': roomId}, ack: (response){
+      print('Join Successfully : $response');
+    });
 
     socket!.off('roomMessages'); // 이전 roomMessages 리스너 제거
     socket!.on('roomMessages', (data) {
