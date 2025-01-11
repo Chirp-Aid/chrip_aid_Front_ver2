@@ -109,7 +109,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                final isSentByMe = message['sender'] == widget.userId;
+                final isSentByMe = message['sender'] == widget.userName;
                 return _buildChatBubble(isSentByMe, message['content']);
               },
             ),
@@ -128,7 +128,8 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     return Align(
       alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
+        margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 12.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
         decoration: BoxDecoration(
           color: isSentByMe ? CustomColor.itemMainColor : Colors.grey[200],
           borderRadius: BorderRadius.circular(16.0),
