@@ -36,4 +36,8 @@ abstract class OrphanageManagementRepository {
   @GET('/requests/products')
   @Headers({'accessToken': 'true'})
   Future<List<ProductEntity>> getProducts(@Query('query') String query);
+
+  // @DELETE('/requests')
+  // @Headers({'accessToken': 'true'})
+  // Future deleteRequest();
 }

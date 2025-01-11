@@ -2,6 +2,7 @@ import 'package:chrip_aid/common/layout/default_layout.dart';
 import 'package:chrip_aid/common/styles/styles.dart';
 import 'package:chrip_aid/management/component/custom_basket_product_box_3.dart';
 import 'package:chrip_aid/management/model/service/orphanage_management_service.dart';
+import 'package:chrip_aid/management/viewmodel/orphanage_edit_product_viewmodel.dart';
 import 'package:chrip_aid/orphanage/model/entity/product_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -10,10 +11,12 @@ import 'package:chrip_aid/management/model/repository/orphanage_management_repos
 
 class SearchProductScreen extends ConsumerStatefulWidget {
   final void Function(int) onProductSelected;
+  final viewModel;
 
   const SearchProductScreen({
     Key? key,
     required this.onProductSelected,
+    required this.viewModel
   }) : super(key: key);
 
   @override
@@ -45,16 +48,12 @@ class _SearchProductScreenState extends ConsumerState<SearchProductScreen> {
   }
 
   Future<void> updateSearchQuery() async {
-    final orphanageService = ref.read(orphanageManagementServiceProvider);
-    final response = await orphanageService.getProductList(searchQuery);
-    if (response.isSuccess) {
-      setState(() {
-        filteredProducts = response.entity!;
-      });
-    } else {
-      // 에러 처리
-      print(response.message);
-    }
+    await widget.viewModel.getInfo(searchQuery);
+    await Future.delayed(const Duration(milliseconds: 200));
+    print('결과: ${widget.viewModel.products}');
+    setState(() {
+      filteredProducts = widget.viewModel.products;
+    });
   }
 
   @override
@@ -72,7 +71,9 @@ class _SearchProductScreenState extends ConsumerState<SearchProductScreen> {
                 Expanded(
                   child: TextField(
                     onChanged: (value) {
-                      searchQuery = value; // 검색어를 업데이트만 함
+                      setState(() {
+                        searchQuery = value; // 검색어를 업데이트만 함
+                      });
                     },
                     decoration: const InputDecoration(
                       hintText: "검색어를 입력하세요",
@@ -82,7 +83,9 @@ class _SearchProductScreenState extends ConsumerState<SearchProductScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: updateSearchQuery, // 검색 아이콘 클릭 시 실행
+                  onPressed: () {
+                    updateSearchQuery();
+                  }, // 검색 아이콘 클릭 시 실행
                 ),
               ],
             ),

@@ -22,7 +22,7 @@ class OrphanageEditProductViewModel {
   OrphanageProductListState productListState = OrphanageProductListState();
   ProductRequestState productState = ProductRequestState();
 
-  List<ProductEntity> get _products => productListState.value ?? [];
+  List<ProductEntity> get products => productListState.value ?? [];
 
   OrphanageEditProductViewModel(this.ref) {
     _orphanageManagementService = ref.read(orphanageManagementServiceProvider);
@@ -50,6 +50,7 @@ class OrphanageEditProductViewModel {
       context: context,
       builder: (context) => SearchProductScreen(
         onProductSelected: onProductSelected,
+        viewModel: this,
       ),
     );
   }
