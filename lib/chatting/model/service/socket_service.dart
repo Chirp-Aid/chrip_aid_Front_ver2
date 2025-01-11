@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:async';
 
@@ -78,7 +80,7 @@ class SocketService {
       return;
     }
 
-    socket!.emit('createRoom', {'user_id': userId, 'orphanage_user_id': orphanageUserId});
+    socket!.emit('createRoom', jsonEncode({'user_id': userId, 'orphanage_user_id': orphanageUserId}));
   }
 
   // 메시지 전송
@@ -88,12 +90,12 @@ class SocketService {
       return;
     }
 
-    socket!.emit('sendMessage', {
+    socket!.emit('sendMessage', jsonEncode({
       'sender': sender,
       'type': type,
       'join_room': joinRoom,
       'content': content,
-    });
+    }));
   }
 
   // 새로운 메시지 수신
@@ -121,7 +123,7 @@ class SocketService {
 
     print("Attempting to join room: $roomId");
 
-    socket!.emit('joinRoom', {'roomId': roomId});
+    socket!.emit('joinRoom', jsonEncode({'roomId': roomId}));
     socket!.off('roomMessages');
 
     socket!.on('roomMessages', (data) {
@@ -137,7 +139,7 @@ class SocketService {
       return;
     }
 
-    socket!.emit('leaveRoom', {'roomId': roomId});
+    socket!.emit('leaveRoom', jsonEncode({'roomId': roomId}));
   }
 
   // 연결 해제 및 리스너 정리
