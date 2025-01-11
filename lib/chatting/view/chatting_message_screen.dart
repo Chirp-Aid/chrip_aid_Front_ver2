@@ -65,10 +65,21 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
 
   void _initializeSocketListeners() {
     print("Initializing socket listeners...");
+    // 새로운 메시지 수신 이벤트 처리
     _socketService.onNewMessage((message) {
       print("New message received: $message");
       setState(() {
         _messages.add(message);
+      });
+    });
+
+    // roomMessages 이벤트 처리
+    _socketService.socket!.on('roomMessages', (data) {
+      print("Room messages received: $data");
+      setState(() {
+        // roomMessages 데이터를 _messages에 추가
+        final List<Map<String, dynamic>> messages = List<Map<String, dynamic>>.from(data);
+        _messages.addAll(messages);
       });
     });
   }
@@ -158,6 +169,7 @@ class _BottomInputFieldState extends State<_BottomInputField> {
       final messageContent = _controller.text;
       print("Sending message: $messageContent");
 
+      // 메시지 전송
       widget.socketService.sendMessage(
         widget.userName,
         "USER", // 사용자 타입은 고정된 문자열로 설정
@@ -165,16 +177,13 @@ class _BottomInputFieldState extends State<_BottomInputField> {
         messageContent,
       );
 
-      setState(() {
-        final newMessage = {'sender': widget.userName, 'content': messageContent};
-        context.findAncestorStateOfType<_ChattingMessageScreenState>()?._messages.add(newMessage);
-      });
-
+      // 메시지 입력 필드 초기화
       _controller.clear();
     } else {
       print("Message content is empty, nothing to send.");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -124,11 +124,6 @@ class SocketService {
     print("Attempting to join room: $roomId");
 
     socket!.emit('joinRoom', jsonEncode({'roomId': roomId}));
-    socket!.off('roomMessages');
-
-    socket!.on('roomMessages', (data) {
-      print('Received messages from room $roomId: $data');
-    });
   }
 
 
