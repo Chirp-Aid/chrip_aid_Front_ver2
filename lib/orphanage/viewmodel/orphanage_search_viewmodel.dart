@@ -19,6 +19,7 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'dart:async';
 
 final orphanageSearchViewModelProvider =
 Provider((ref) => OrphanageSearchViewModel(ref));
@@ -38,6 +39,7 @@ class OrphanageSearchViewModel {
 
   final panelController = SlidingUpPanelController();
   final searchTextController = TextEditingController();
+  Timer? _debounce;
 
   late final MemberInfoService _memberInfoService;
   late final OrphanageService _orphanageService;
@@ -45,9 +47,7 @@ class OrphanageSearchViewModel {
   final MemberInfoState memberState = MemberInfoState();
 
   final OrphanageListState _orphanageListState = OrphanageListState();
-
   final OrphanageListState orphanageListState = OrphanageListState();
-
   final OrphanageListState orphanageState = OrphanageListState();
 
   UserDetailEntity? get _userInfo => memberState.value as UserDetailEntity?;
@@ -95,11 +95,18 @@ class OrphanageSearchViewModel {
     majorRegionDropdownController.addListener(() {
       _initMarker();
       _moveCameraByAddress(majorRegionDropdownController.selected.name);
-      _filterOrphanages();
+      filterOrphanages();
     });
 
     subRegionDropdownController.addListener(() {
-      _filterOrphanages();
+      filterOrphanages();
+    });
+
+    searchTextController.addListener(() {
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      _debounce = Timer(const Duration(milliseconds: 300), () {
+        filterOrphanages(); // 300ms 후에 필터링 메서드 호출
+      });
     });
 
     getInfo();
@@ -112,7 +119,7 @@ class OrphanageSearchViewModel {
     _orphanageListState.withResponse(_orphanageService.getOrphanageList());
   }
 
-  void _filterOrphanages() {
+  void filterOrphanages() {
     orphanageListState.success(
       value: _orphanageListState.value
           ?.where((e) =>

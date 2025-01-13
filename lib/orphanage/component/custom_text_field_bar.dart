@@ -47,10 +47,13 @@ class CustomTextFieldBar extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(
-              Icons.search,
-              size: kIconMainSize,
-              color: CustomColor.mainColor,
+            GestureDetector(
+              onTap: onTap,
+              child: const Icon(
+                Icons.search,
+                size: kIconMainSize,
+                color: CustomColor.mainColor,
+              ),
             ),
           ],
         ),

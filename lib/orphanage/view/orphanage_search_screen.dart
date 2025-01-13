@@ -44,6 +44,8 @@ class OrphanageSearchScreen extends ConsumerWidget {
                       child: Material(
                         child: CustomTextFieldBar(
                           controller: viewModel.searchTextController,
+                          onTap: () => viewModel.filterOrphanages(),
+
                         ),
                       ),
                     ),
