@@ -21,7 +21,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 
 final orphanageSearchViewModelProvider =
-    Provider((ref) => OrphanageSearchViewModel(ref));
+Provider((ref) => OrphanageSearchViewModel(ref));
 
 class OrphanageSearchViewModel {
   Ref ref;
@@ -30,9 +30,9 @@ class OrphanageSearchViewModel {
   final Set<Marker> markers = {};
 
   late final CustomDropdownButtonController<MajorRegion>
-      majorRegionDropdownController;
-  late final CustomDropdownButtonController<SubRegion>
-      subRegionDropdownController;
+  majorRegionDropdownController;
+  late final CustomDropdownButtonController<String>
+  subRegionDropdownController;
 
   late final CustomDropdownButtonController sortDropdownController;
 
@@ -75,18 +75,19 @@ class OrphanageSearchViewModel {
           ? 0
           : MajorRegion.values.indexOf(_userInfo!.region.majorRegion),
       onChanged: (_) {
-        subRegionDropdownController.items =
-            majorRegionDropdownController.selected.subTypes;
+        subRegionDropdownController.items = [
+          '전체',
+          ...majorRegionDropdownController.selected.subTypes.map((e) => e.name)
+        ];
+        subRegionDropdownController.select(0); // '전체' 기본 선택
       },
     );
+
     subRegionDropdownController = CustomDropdownButtonController(
-      majorRegionDropdownController.selected.subTypes,
-      initIndex: _userInfo == null
-          ? 0
-          : _userInfo!.region.majorRegion.subTypes.indexOf(
-              _userInfo!.region,
-            ),
+      ['전체', ...majorRegionDropdownController.selected.subTypes.map((e) => e.name)],
+      initIndex: 0,
     );
+
     sortDropdownController = CustomDropdownButtonController(
       ["최신순", "오래된순"],
     );
@@ -94,29 +95,11 @@ class OrphanageSearchViewModel {
     majorRegionDropdownController.addListener(() {
       _initMarker();
       _moveCameraByAddress(majorRegionDropdownController.selected.name);
-      orphanageListState.success(
-          value: _orphanageListState.value
-                  ?.where((e) =>
-                      e.address.contains(
-                          subRegionDropdownController.selected.name) &&
-                      e.address.contains(
-                          majorRegionDropdownController.selected.fullName) &&
-                      e.orphanageName.contains(searchTextController.text))
-                  .toList() ??
-              []);
+      _filterOrphanages();
     });
 
     subRegionDropdownController.addListener(() {
-      orphanageListState.success(
-          value: _orphanageListState.value
-                  ?.where((e) =>
-                      e.address.contains(
-                          subRegionDropdownController.selected.name) &&
-                      e.address.contains(
-                          majorRegionDropdownController.selected.fullName) &&
-                      e.orphanageName.contains(searchTextController.text))
-                  .toList() ??
-              []);
+      _filterOrphanages();
     });
 
     getInfo();
@@ -127,6 +110,19 @@ class OrphanageSearchViewModel {
       memberState.withResponse(_memberInfoService.getMemberInfo());
     }
     _orphanageListState.withResponse(_orphanageService.getOrphanageList());
+  }
+
+  void _filterOrphanages() {
+    orphanageListState.success(
+      value: _orphanageListState.value
+          ?.where((e) =>
+      e.address.contains(majorRegionDropdownController.selected.fullName) &&
+          (subRegionDropdownController.selected == '전체' ||
+              e.address.contains(subRegionDropdownController.selected)) &&
+          e.orphanageName.contains(searchTextController.text))
+          .toList() ??
+          [],
+    );
   }
 
   void onPanelExpanded(BuildContext context) {
@@ -183,7 +179,7 @@ class OrphanageSearchViewModel {
   void _addMarkerByAddress(OrphanageEntity entity) async {
     var googleGeocoding = GoogleGeocoding(dotenv.get('GOOGLE_MAP_KEY'));
     GeocodingResponse? p =
-        await googleGeocoding.geocoding.get(entity.address, []);
+    await googleGeocoding.geocoding.get(entity.address, []);
 
     if (p == null) return;
 
