@@ -49,7 +49,7 @@ class _SearchProductScreenState extends ConsumerState<SearchProductScreen> {
 
   Future<void> updateSearchQuery() async {
     await widget.viewModel.getInfo(searchQuery);
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 500));
     print('결과: ${widget.viewModel.products}');
     setState(() {
       filteredProducts = widget.viewModel.products;

@@ -7,6 +7,7 @@ import 'package:chrip_aid/common/styles/text_styles.dart';
 import 'package:chrip_aid/common/value_state/component/value_state_listener.dart';
 import 'package:chrip_aid/management/component/custom_basket_product_box_2.dart';
 import 'package:chrip_aid/management/model/dto/add_orphanage_product_request_dto.dart';
+import 'package:chrip_aid/management/model/dto/insert_product_dto.dart';
 import 'package:chrip_aid/management/viewmodel/orphanage_edit_product_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,7 +65,8 @@ class OrphanageEditProductScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            successBuilder: (_ ,state) => CustomBasketProductBox2(
+                            successBuilder: (_, state) =>
+                                CustomBasketProductBox2(
                               productName: state.value!.product.title,
                               count: state.value!.count,
                               price: state.value!.product.price,
@@ -101,7 +103,18 @@ class OrphanageEditProductScreen extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMiddleSize),
             CustomOutlinedButton(
-              onPressed: () => viewModel.post(context),
+              onPressed: () async {
+                viewModel.insertProduct(
+                    context,
+                    InsertProductDTO(
+                        title: viewModel.productState.value!.product.title,
+                        price: int.parse(
+                            viewModel.productState.value!.product.price),
+                        image: viewModel.productState.value!.product.image,
+                        link: viewModel.productState.value!.product.link));
+                await Future.delayed(const Duration(milliseconds: 500));
+                viewModel.post(context);
+              },
               text: 'POST',
               textStyle: kTextReverseStyleMiddle,
             ),
