@@ -1,5 +1,6 @@
 import 'package:chrip_aid/common/value_state/util/value_state_util.dart';
 import 'package:chrip_aid/management/model/dto/add_orphanage_product_request_dto.dart';
+import 'package:chrip_aid/management/model/dto/insert_product_dto.dart';
 import 'package:chrip_aid/management/model/entity/product_request_entity.dart';
 import 'package:chrip_aid/management/model/service/orphanage_management_service.dart';
 import 'package:chrip_aid/management/model/state/orphanage_management_state.dart';
@@ -22,7 +23,7 @@ class OrphanageEditProductViewModel {
   OrphanageProductListState productListState = OrphanageProductListState();
   ProductRequestState productState = ProductRequestState();
 
-  List<ProductEntity> get _products => productListState.value ?? [];
+  List<ProductEntity> get products => productListState.value ?? [];
 
   OrphanageEditProductViewModel(this.ref) {
     _orphanageManagementService = ref.read(orphanageManagementServiceProvider);
@@ -50,6 +51,7 @@ class OrphanageEditProductViewModel {
       context: context,
       builder: (context) => SearchProductScreen(
         onProductSelected: onProductSelected,
+        viewModel: this,
       ),
     );
   }
@@ -64,5 +66,13 @@ class OrphanageEditProductViewModel {
       ),
     );
     if (context.mounted) context.pop();
+  }
+
+  void insertProduct(BuildContext context, InsertProductDTO dto) async {
+    await _orphanageManagementService.insertProduct(dto);
+  }
+
+  void delete(BuildContext context, String requestId) async {
+    await _orphanageManagementService.deleteRequest(requestId);
   }
 }

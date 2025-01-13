@@ -44,6 +44,8 @@ class OrphanageSearchScreen extends ConsumerWidget {
                       child: Material(
                         child: CustomTextFieldBar(
                           controller: viewModel.searchTextController,
+                          onTap: () => viewModel.filterOrphanages(),
+
                         ),
                       ),
                     ),
@@ -94,18 +96,29 @@ class OrphanageSearchScreen extends ConsumerWidget {
               Expanded(
                 child: ValueStateListener(
                   state: viewModel.orphanageListState,
-                  successBuilder: (_, state) => ListView.separated(
-                    itemCount: state.value!.length,
-                    itemBuilder: (context, i) => OrphanageInfoItem(
-                      entity: state.value![i],
-                      onTap: () => context.pop(
-                        state.value![i].orphanageId,
+                  successBuilder: (_, state) {
+                    if (state.value!.isEmpty) {
+                      return Center(
+                        child: Text(
+                          '검색 결과가 없습니다.\n다른 지역을 선택하거나 검색어를 변경해 보세요.',
+                          style: kTextContentStyleMedium,
+                          textAlign: TextAlign.center, // 텍스트 중앙 정렬
+                        ),
+                      );
+                    }
+                    return ListView.separated(
+                      itemCount: state.value!.length,
+                      itemBuilder: (context, i) => OrphanageInfoItem(
+                        entity: state.value![i],
+                        onTap: () => context.pop(
+                          state.value![i].orphanageId,
+                        ),
                       ),
-                    ),
-                    separatorBuilder: (_, __) => const SizedBox(
-                      height: kPaddingMiddleSize,
-                    ),
-                  ),
+                      separatorBuilder: (_, __) => const SizedBox(
+                        height: kPaddingMiddleSize,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

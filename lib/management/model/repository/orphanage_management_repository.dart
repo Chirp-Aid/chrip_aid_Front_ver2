@@ -1,6 +1,7 @@
 import 'package:chrip_aid/common/dio/dio.dart';
 import 'package:chrip_aid/management/model/dto/add_orphanage_product_request_dto.dart';
 import 'package:chrip_aid/management/model/dto/edit_orphanage_info_request_dto.dart';
+import 'package:chrip_aid/management/model/dto/insert_product_dto.dart';
 import 'package:chrip_aid/orphanage/model/entity/orphanage_detail_entity.dart';
 import 'package:chrip_aid/orphanage/model/entity/product_entity.dart';
 import 'package:dio/dio.dart' hide Headers;
@@ -36,4 +37,12 @@ abstract class OrphanageManagementRepository {
   @GET('/requests/products')
   @Headers({'accessToken': 'true'})
   Future<List<ProductEntity>> getProducts(@Query('query') String query);
+
+  @POST('/requests/products/insert')
+  @Headers({'accessToken': 'true'})
+  Future InsertProduct(@Body() InsertProductDTO dto);
+
+  @DELETE('/requests/{id}')
+  @Headers({'accessToken': 'true'})
+  Future deleteRequest(@Path('id') String deleteRequestId);
 }
