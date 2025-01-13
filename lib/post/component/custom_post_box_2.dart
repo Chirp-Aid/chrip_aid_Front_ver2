@@ -143,10 +143,10 @@ class CustomPostBox2 extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              child: Image.network(
+                              child: photos[index].length > 3 ? Image.network(
                                 photos[index],
                                 fit: BoxFit.cover,
-                              ),
+                              ) : Container(),
                             ),
                           )),
                     ),
