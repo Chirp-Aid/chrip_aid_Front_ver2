@@ -19,8 +19,7 @@ class OrphanageEditProductScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.read(orphanageEditProductViewModelProvider)
-      ..getInfo('a');
+    final viewModel = ref.read(orphanageEditProductViewModelProvider);
     return DefaultLayout(
       title: "물품 요청글 작성",
       titleStyle: kTextContentStyleMedium,

@@ -35,6 +35,8 @@ class CustomProductBox2 extends ConsumerWidget {
   final int requestCount;
   final int supportCount;
   final double progress;
+  final managementViewModel;
+  final editViewModel;
 
   const CustomProductBox2({
     required this.requiredId,
@@ -45,6 +47,8 @@ class CustomProductBox2 extends ConsumerWidget {
     required this.requestCount,
     required this.supportCount,
     required this.progress,
+    required this.managementViewModel,
+    required this.editViewModel,
     Key? key,
   }) : super(key: key);
 
@@ -102,7 +106,10 @@ class CustomProductBox2 extends ConsumerWidget {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  await editViewModel.delete(context, requiredId.toString());
+                                  await managementViewModel.getInfo();
+                                },
                                 icon: const Icon(
                                   Icons.delete,
                                   size: kIconXSmallSize,

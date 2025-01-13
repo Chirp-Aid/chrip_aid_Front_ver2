@@ -35,7 +35,8 @@ class OrphanageManagementService {
     }
   }
 
-  Future<ResponseEntity<List<ProductEntity>>> getProductList(String search) async {
+  Future<ResponseEntity<List<ProductEntity>>> getProductList(
+      String search) async {
     try {
       List<ProductEntity> data = await repository.getProducts(search);
       return ResponseEntity.success(entity: data);
@@ -60,6 +61,16 @@ class OrphanageManagementService {
   ) async {
     try {
       await repository.editOrphanageInfo(dto);
+      return ResponseEntity.success();
+    } catch (e) {
+      return ResponseEntity.error(message: e.toString());
+    }
+  }
+
+  Future deleteRequest(String deleteRequestId) async {
+    try {
+      print('삭제할려는 글: $deleteRequestId');
+      await repository.deleteRequest(deleteRequestId);
       return ResponseEntity.success();
     } catch (e) {
       return ResponseEntity.error(message: e.toString());
