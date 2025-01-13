@@ -54,6 +54,9 @@ class OrphanageEditPostsViewModel {
             .toList(),
       ),
     );
+    await Future.delayed(const Duration(milliseconds: 200));
+    getInfo();
+    await Future.delayed(const Duration(milliseconds: 200));
     if (context.mounted) context.pop();
   }
 }
