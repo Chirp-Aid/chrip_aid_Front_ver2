@@ -78,7 +78,10 @@ class OrphanageEditPostScreen extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMiddleSize),
             CustomOutlinedButton(
-              onPressed: () => viewModel.post(context),
+              onPressed: () {
+                viewModel.post(context);
+                viewModel.getInfo();
+              },
               text: 'POST',
               textStyle: kTextReverseStyleMiddle,
             ),
