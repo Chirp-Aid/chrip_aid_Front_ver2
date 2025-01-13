@@ -96,7 +96,7 @@ class _SearchProductScreenState extends ConsumerState<SearchProductScreen> {
               padding: const EdgeInsets.all(kPaddingSmallSize),
               itemBuilder: (_, i) => InkWell(
                 onTap: () {
-                  widget.onProductSelected(i);
+                  widget.viewModel.onProductSelected(i);
                   context.pop();
                 },
                 child: CustomBasketProductBox3(entity: filteredProducts[i]),
