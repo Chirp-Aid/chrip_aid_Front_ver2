@@ -2,6 +2,7 @@ import 'package:chrip_aid/common/styles/colors.dart';
 import 'package:chrip_aid/common/styles/sizes.dart';
 import 'package:chrip_aid/common/styles/text_styles.dart';
 import 'package:chrip_aid/common/value_state/component/value_state_listener.dart';
+import 'package:chrip_aid/management/viewmodel/orphanage_edit_product_viewmodel.dart';
 import 'package:chrip_aid/orphanage/component/custom_product_box_2.dart';
 import 'package:chrip_aid/orphanage/component/custom_text_field.dart';
 import 'package:chrip_aid/orphanage/layout/detail_page_layout.dart';
@@ -16,14 +17,15 @@ class OrphanageManagementScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.read(orphanageManagementViewModelProvider)..getInfo();
+    final managementViewModel = ref.read(orphanageManagementViewModelProvider)..getInfo();
+    final editViewModel = ref.read(orphanageEditProductViewModelProvider);
     return DetailPageLayout(
       appBarBackgroundColor: Colors.transparent,
       backgroundColor: CustomColor.backgroundMainColor,
       leadingColor: CustomColor.textReverseColor,
       actions: [
         IconButton(
-          onPressed: () => viewModel.navigateToEditOrphanageScreen(context),
+          onPressed: () => managementViewModel.navigateToEditOrphanageScreen(context),
           icon: const Icon(Icons.edit, size: kIconSmallSize),
           color: CustomColor.textReverseColor,
           splashRadius: kIconSmallSize,
@@ -33,7 +35,7 @@ class OrphanageManagementScreen extends ConsumerWidget {
         const SizedBox(width: kPaddingMiddleSize),
       ],
       child: ValueStateListener(
-        state: viewModel.orphanageState,
+        state: managementViewModel.orphanageState,
         loadingBuilder: (_, __) =>
             const Center(child: CircularProgressIndicator()),
         successBuilder: (_, state) {
@@ -131,7 +133,7 @@ class OrphanageManagementScreen extends ConsumerWidget {
                       const Expanded(child: SizedBox()),
                       IconButton(
                         onPressed: () =>
-                            viewModel.navigateToAddProductScreen(context),
+                            managementViewModel.navigateToAddProductScreen(context),
                         icon: const Icon(
                           Icons.add,
                           size: kIconSmallSize,
@@ -162,6 +164,8 @@ class OrphanageManagementScreen extends ConsumerWidget {
                         requestCount: item.requestCount,
                         supportCount: item.supportCount,
                         progress: item.supportCount / item.requestCount,
+                        managementViewModel: managementViewModel,
+                        editViewModel: editViewModel,
                       );
                     },
                     padding: EdgeInsets.zero,

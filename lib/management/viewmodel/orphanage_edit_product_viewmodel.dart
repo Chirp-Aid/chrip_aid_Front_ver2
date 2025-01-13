@@ -66,4 +66,8 @@ class OrphanageEditProductViewModel {
     );
     if (context.mounted) context.pop();
   }
+
+  void delete(BuildContext context, String requestId) async {
+    await _orphanageManagementService.deleteRequest(requestId);
+  }
 }
