@@ -33,8 +33,8 @@ class UserHomeScreen extends TabScreen {
                     crossAxisAlignment: CrossAxisAlignment.start, // 앱 특징 왼쪽 정렬
                     children: [
                       CustomImageCategoryCard(
-                        title: "Find Local Orphanages",
-                        subtitle: "Search for orphanages in your area quickly and easily",
+                        title: "우리동네 보육원 찾기",
+                        subtitle: "지역 내 보육원을 쉽고 빠르게 검색하세요",
                         imagePath: "assets/image/pin.png", // 아이콘 경로
                         backgroundColor: Colors.pink.withOpacity(0.65), // 배경색
                         textColor: Colors.white,
@@ -44,8 +44,8 @@ class UserHomeScreen extends TabScreen {
                       ),
                       const SizedBox(height: kPaddingMiddleSize),
                       CustomImageCategoryCard(
-                        title: "Donation Certification Posts",
-                        subtitle: "Check other users' donation activities\nand join the cause",
+                        title: "후원 인증글",
+                        subtitle: "다른 사용자의 기부 활동을 확인하고\n기부에 동참해보세요",
                         imagePath: "assets/image/giving.png", // 아이콘 경로
                         backgroundColor: Colors.blue.withOpacity(0.65), // 배경색
                         textColor: Colors.white,
@@ -55,8 +55,8 @@ class UserHomeScreen extends TabScreen {
                       ),
                       const SizedBox(height: kPaddingMiddleSize),
                       CustomImageCategoryCard(
-                        title: "Visit Request History",
-                        subtitle: "Manage your visit request history for orphanages",
+                        title: "방문 신청 내역",
+                        subtitle: "보육원 방문 신청 내역을 관리하세요",
                         imagePath: "assets/image/calendar.png", // 아이콘 경로
                         backgroundColor: Colors.orange.withOpacity(0.65), // 배경색
                         textColor: Colors.white,
@@ -69,7 +69,7 @@ class UserHomeScreen extends TabScreen {
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          "App Features",
+                          "앱 특징",
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,

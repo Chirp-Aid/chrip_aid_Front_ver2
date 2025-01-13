@@ -28,24 +28,24 @@ class RootTabViewModel {
     switch (authorityState.value!) {
       case AuthorityType.user:
         return const [
-          TabInfo(UserHomeScreen(), icon: Icons.home, label: 'Home'),
-          TabInfo(OrphanageMapScreen(), icon: Icons.map, label: 'Search'),
-          TabInfo(UserPostScreen(), icon: Icons.volunteer_activism, label: 'Posts'),
-          TabInfo(UserReservationScreen(), icon: Icons.history, label: 'History'),
-          TabInfo(UserInfoScreen(), icon: Icons.person, label: 'Profile'),
+          TabInfo(UserHomeScreen(), icon: Icons.home, label: '메인페이지'),
+          TabInfo(OrphanageMapScreen(), icon: Icons.map, label: '보육원 검색'),
+          TabInfo(UserPostScreen(), icon: Icons.volunteer_activism, label: '인증글 확인'),
+          TabInfo(UserReservationScreen(), icon: Icons.history, label: '신청 내역'),
+          TabInfo(UserInfoScreen(), icon: Icons.person, label: '마이페이지'),
         ];
       case AuthorityType.orphanage:
         return const [
-          TabInfo(OrphanageHomeScreen(), icon: Icons.home, label: 'Home'),
-          TabInfo(OrphanageManagementScreen(), icon: Icons.map, label: 'Manage'),
-          TabInfo(OrphanagePostScreen(), icon: Icons.volunteer_activism, label: 'Posts'),
-          TabInfo(OrphanageReservationScreen(), icon: Icons.history, label: 'Requests'),
-          TabInfo(OrphanageMemberInfoScreen(), icon: Icons.person, label: 'Profile'),
+          TabInfo(OrphanageHomeScreen(), icon: Icons.home, label: '메인페이지'),
+          TabInfo(OrphanageManagementScreen(), icon: Icons.map, label: '보육원 관리'),
+          TabInfo(OrphanagePostScreen(), icon: Icons.volunteer_activism, label: '인증글 작성'),
+          TabInfo(OrphanageReservationScreen(), icon: Icons.history, label: '신청 관리'),
+          TabInfo(OrphanageMemberInfoScreen(), icon: Icons.person, label: '마이페이지'),
         ];
       case AuthorityType.admin:
         return const [
-          TabInfo(AdminHomeScreen(), icon: Icons.home, label: 'Settings'),
-          TabInfo(UserInfoScreen(), icon: Icons.person, label: 'Profile'),
+          TabInfo(AdminHomeScreen(), icon: Icons.home, label: '예약 설정'),
+          TabInfo(UserInfoScreen(), icon: Icons.person, label: '마이페이지'),
         ];
     }
   }

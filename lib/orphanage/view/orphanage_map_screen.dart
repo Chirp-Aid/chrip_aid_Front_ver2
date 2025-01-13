@@ -164,7 +164,7 @@ class _SlidingUpPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(orphanageSearchViewModelProvider);
     return SlidingUpPanelWidget(
-      anchor: 0.48,
+      anchor: 0.43,
       elevation: 8.0,
       controlHeight: kPaddingSmallSize + kPaddingLargeSize + 5,
       panelController: viewModel.panelController,
