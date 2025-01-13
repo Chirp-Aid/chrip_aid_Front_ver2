@@ -115,11 +115,11 @@ class CustomPostBox extends StatelessWidget {
                     ClipRRect(
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        height: 200,
-                        child: Image.network(
+                        height: photo.length != 0 ? 200 : 50,
+                        child: photo.length != 0 ? Image.network(
                           photo,
                           fit: BoxFit.cover,
-                        ),
+                        ) : Container(),
                       ),
                     ),
                     Row(
