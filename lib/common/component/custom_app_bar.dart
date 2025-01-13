@@ -37,7 +37,7 @@ class CustomAppBar extends ConsumerWidget {
                 ),
               ),
               Text(
-                "보육원과 마음을 잇는 플랫폼",
+                "Platform connecting orphanages with kindness",
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontSize: 14.0,
