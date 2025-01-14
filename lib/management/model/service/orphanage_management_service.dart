@@ -2,6 +2,7 @@ import 'package:chrip_aid/admin/model/state/admin_detail_state.dart';
 import 'package:chrip_aid/common/entity/response_entity.dart';
 import 'package:chrip_aid/management/model/dto/add_orphanage_product_request_dto.dart';
 import 'package:chrip_aid/management/model/dto/edit_orphanage_info_request_dto.dart';
+import 'package:chrip_aid/management/model/dto/insert_product_dto.dart';
 import 'package:chrip_aid/management/model/repository/orphanage_management_repository.dart';
 import 'package:chrip_aid/member/model/entity/member_entity.dart';
 import 'package:chrip_aid/member/model/entity/orphanage_member_entity.dart';
@@ -51,6 +52,15 @@ class OrphanageManagementService {
     try {
       await repository.editOrphanageProduct(dto);
       return getOrphanageInfo();
+    } catch (e) {
+      return ResponseEntity.error(message: e.toString());
+    }
+  }
+
+  Future insertProduct(InsertProductDTO dto) async {
+    try {
+      print('추가할려는 물품: $dto');
+      await repository.InsertProduct(dto);
     } catch (e) {
       return ResponseEntity.error(message: e.toString());
     }
