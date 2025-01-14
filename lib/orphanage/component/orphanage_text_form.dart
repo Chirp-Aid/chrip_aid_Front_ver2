@@ -54,7 +54,8 @@ class OrphanageTextForm extends StatelessWidget {
             controller: controller,
             style: kTextMainStyleSmall,
             cursorColor: CustomColor.mainColor,
-            maxLines: null,
+            minLines: 10,
+            maxLines: 10,
             decoration: const InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.only(
