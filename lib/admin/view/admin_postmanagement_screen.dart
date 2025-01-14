@@ -123,7 +123,7 @@ class _AdminPostmanagementScreenState
                         child: CustomPostList(
                           id: post.reviewId,
                           postType: 'review',
-                          title: "기부 감사 - ${post.reviewId}",
+                          title: post.title,
                           content: post.content,
                           writtenAt: post.date,
                           nickname: post.name,

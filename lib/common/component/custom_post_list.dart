@@ -25,7 +25,7 @@ class CustomPostList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: (){},
       child: Container(
         padding: const EdgeInsets.all(16.0),
         margin: const EdgeInsets.all(8.0),
@@ -90,18 +90,10 @@ class CustomPostList extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                ElevatedButton(
+                IconButton(
+                  color: Colors.red,
                   onPressed: onDelete,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.withOpacity(0.7),
-                  ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.delete),
-                      SizedBox(width: 4.0),
-                      Text("삭제"),
-                    ],
-                  ),
+                  icon: Icon(Icons.delete),
                 ),
               ],
             ),
