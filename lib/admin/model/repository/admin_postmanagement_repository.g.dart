@@ -6,7 +6,7 @@ part of 'admin_postmanagement_repository.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
 class _AdminPostManagementRepository implements AdminPostManagementRepository {
   _AdminPostManagementRepository(
