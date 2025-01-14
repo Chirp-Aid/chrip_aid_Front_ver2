@@ -1,11 +1,19 @@
+import 'dart:convert';
+
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'dart:async';
 
+class SocketService {
+  IO.Socket? socket;
 
-class SocketService{
-  late IO.Socket socket;
-
-  void initializeSocket(String userId) async{
+  Future<void> initializeSocket(String userId) async {
     print('userId in initializeSocket : $userId');
+
+    if (socket != null && socket!.connected) {
+      print("Existing socket detected. Disconnecting...");
+      disconnect();
+    }
+
     Map<String, dynamic> headers = {
       'x-user-id': userId,
     };
@@ -13,81 +21,132 @@ class SocketService{
     socket = IO.io(
       'ws://3.34.17.191:3000',
       IO.OptionBuilder()
-          .setTransports(['websocket'])  // 웹소켓 사용 설정
-          .disableAutoConnect()           // 자동 연결 비활성화 (필요 시)
-          .setAuth(headers)       // 헤더 설정
-          // .setExtraHeaders(headers)       // 헤더 설정
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .setExtraHeaders(headers)
+          .setReconnectionAttempts(5)
+          .setReconnectionDelay(2000)
           .build(),
     );
-    // 소켓 연결
-    socket.connect();
 
+    final completer = Completer<void>();
 
-    socket.onConnect((_) {
+    // 연결 이벤트 등록
+    socket!.onConnect((_) {
       print('Connected to socket');
+      completer.complete();
     });
 
-    socket.onDisconnect((reason) {
-      socket.off('newMessage');
+    socket!.onConnectError((error) {
+      print('Connection error: $error');
+      completer.completeError(error);
+    });
+
+    socket!.on('connect_timeout', (_) {
+      print('Connection timed out');
+      completer.completeError('Connection timed out');
+    });
+
+    socket!.connect();
+
+    print('Waiting for socket connection...');
+    await completer.future; // 연결 완료 대기
+    print('Socket connection established!');
+
+    _setupSocketListeners();
+  }
+
+  void _setupSocketListeners() {
+    if (socket == null) {
+      print("Socket is not initialized. Unable to set up listeners.");
+      return;
+    }
+
+    socket!.onDisconnect((reason) {
       print('Disconnected from socket: $reason');
     });
 
-    socket.on('connect_error', (error) {
+    socket!.on('connect_error', (error) {
       print('Connection error: $error');
     });
 
-    socket.on('connect_timeout', (_) {
-      print('Connection timed out');
-    });
-
-    socket.on('newMessage', (data) {
-      print('Received message from server: $data');
-    });
+    // Add other event listeners as needed
   }
 
   // 채팅방 생성
   void createRoom(String userId, String orphanageUserId) {
-    socket.emit('createRoom', {
-      'user_id': userId,
-      'orphanage_user_id': orphanageUserId,
-    });
+    if (socket == null || !socket!.connected) {
+      print("Socket is not connected. Unable to create room.");
+      return;
+    }
+
+    socket!.emit('createRoom', jsonEncode({'user_id': userId, 'orphanage_user_id': orphanageUserId}));
   }
 
   // 메시지 전송
   void sendMessage(String sender, String type, String joinRoom, String content) {
-    socket.emit('sendMessage', {
+    if (socket == null || !socket!.connected) {
+      print("Socket is not connected. Unable to send message.");
+      return;
+    }
+
+    socket!.emit('sendMessage', jsonEncode({
       'sender': sender,
       'type': type,
       'join_room': joinRoom,
       'content': content,
-    });
+    }));
   }
 
   // 새로운 메시지 수신
   void onNewMessage(Function(dynamic) callback) {
-    socket.on('newMessage', callback);
+    if (socket == null || !socket!.connected) {
+      print("Socket is not connected. Unable to set newMessage listener.");
+      return;
+    }
+
+    socket!.off('newMessage'); // 이전 리스너 제거
+    socket!.on('newMessage', callback);
   }
 
   // 채팅방 입장
   void joinRoom(String roomId) {
-    socket.emit('joinRoom', {
-      'roomId': roomId,
-    });
-    socket.on('roomMessages', (data) {
-      print('Joined room and received messages: $data');
-    });
+    if (socket == null) {
+      print("Socket is not initialized. Unable to join room.");
+      return;
+    }
+
+    if (!socket!.connected) {
+      print("Socket is not connected. Unable to join room.");
+      return;
+    }
+
+    print("Attempting to join room: $roomId");
+
+    socket!.emit('joinRoom', jsonEncode({'roomId': roomId}));
   }
+
 
   // 채팅방 퇴장
   void leaveRoom(String roomId) {
-    socket.emit('leaveRoom', {
-      'roomId': roomId,
-    });
+    if (socket == null || !socket!.connected) {
+      print("Socket is not connected. Unable to leave room.");
+      return;
+    }
+
+    socket!.emit('leaveRoom', jsonEncode({'roomId': roomId}));
   }
 
-  // 연결 해제
+  // 연결 해제 및 리스너 정리
   void disconnect() {
-    socket.disconnect();
-  }
+    if (socket == null) {
+      print("Socket is not initialized. Nothing to disconnect.");
+      return;
+    }
 
+    print("Disconnecting socket...");
+    socket!.disconnect();
+    socket!.clearListeners();
+    socket = null; // 소켓 객체 제거
+  }
 }
