@@ -31,16 +31,21 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
   void initState() {
     super.initState();
 
-    // SocketService 초기화
+    _initializeSocketAndJoinRoom();
+  }
+
+  Future<void> _initializeSocketAndJoinRoom() async {
     _socketService = SocketService();
-    _socketService.initializeSocket(widget.userId);
 
-    print("Initializing ChattingMessageScreen");
-    print("ChatRoomId: ${widget.chatRoomId}, TargetId: ${widget.targetId}");
+    // 소켓 연결 완료 대기
+    await _socketService.initializeSocket(widget.userId);
+    print("Socket initialized successfully!");
 
-    _initializeSocketListeners();
+    // 소켓 연결 후 채팅방 입장
     _socketService.joinRoom(widget.chatRoomId);
-    print("Joined room: ${widget.chatRoomId}");
+
+    // 이벤트 리스너 등록
+    _initializeSocketListeners();
 
     _initializeUserDetails();
   }
@@ -48,7 +53,6 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
   Future<void> _initializeUserDetails() async {
     print("Fetching user details...");
     try {
-
       setState(() {
         userName = widget.userName;
       });
@@ -61,10 +65,21 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
 
   void _initializeSocketListeners() {
     print("Initializing socket listeners...");
+    // 새로운 메시지 수신 이벤트 처리
     _socketService.onNewMessage((message) {
       print("New message received: $message");
       setState(() {
         _messages.add(message);
+      });
+    });
+
+    // roomMessages 이벤트 처리
+    _socketService.socket!.on('roomMessages', (data) {
+      print("Room messages received: $data");
+      setState(() {
+        // roomMessages 데이터를 _messages에 추가
+        final List<Map<String, dynamic>> messages = List<Map<String, dynamic>>.from(data);
+        _messages.addAll(messages);
       });
     });
   }
@@ -94,7 +109,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                final isSentByMe = message['sender'] == widget.userId;
+                final isSentByMe = message['sender'] == widget.userName;
                 return _buildChatBubble(isSentByMe, message['content']);
               },
             ),
@@ -102,7 +117,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
           _BottomInputField(
             chatRoomId: widget.chatRoomId,
             socketService: _socketService,
-            userName: userName, // userName만 전달
+            userName: userName,
           ),
         ],
       ),
@@ -113,7 +128,8 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     return Align(
       alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
+        margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 12.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
         decoration: BoxDecoration(
           color: isSentByMe ? CustomColor.itemMainColor : Colors.grey[200],
           borderRadius: BorderRadius.circular(16.0),
@@ -128,6 +144,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     );
   }
 }
+
 
 class _BottomInputField extends StatefulWidget {
   final String chatRoomId;
@@ -153,6 +170,7 @@ class _BottomInputFieldState extends State<_BottomInputField> {
       final messageContent = _controller.text;
       print("Sending message: $messageContent");
 
+      // 메시지 전송
       widget.socketService.sendMessage(
         widget.userName,
         "USER", // 사용자 타입은 고정된 문자열로 설정
@@ -160,16 +178,13 @@ class _BottomInputFieldState extends State<_BottomInputField> {
         messageContent,
       );
 
-      setState(() {
-        final newMessage = {'sender': widget.userName, 'content': messageContent};
-        context.findAncestorStateOfType<_ChattingMessageScreenState>()?._messages.add(newMessage);
-      });
-
+      // 메시지 입력 필드 초기화
       _controller.clear();
     } else {
       print("Message content is empty, nothing to send.");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

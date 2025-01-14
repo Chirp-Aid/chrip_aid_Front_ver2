@@ -211,16 +211,11 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
                                     const SizedBox(
                                       height: kPaddingSmallSize,
                                     ),
-                                    Expanded(
-                                      child: OrphanageTextForm(
-                                        title: "사유",
-                                        iconData: Icons.description,
-                                        controller:
-                                            viewModel.purposeTextController,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: kPaddingMiddleSize,
+                                    OrphanageTextForm(
+                                      title: "사유",
+                                      iconData: Icons.description,
+                                      controller:
+                                      viewModel.purposeTextController,
                                     ),
                                   ],
                                 ),

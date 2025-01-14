@@ -9,7 +9,7 @@ part of 'add_orphanage_product_request_dto.dart';
 AddOrphanageProductRequestDTO _$AddOrphanageProductRequestDTOFromJson(
         Map<String, dynamic> json) =>
     AddOrphanageProductRequestDTO(
-      title: json['title'],
+      title: json['title'] as String,
       count: (json['count'] as num).toInt(),
       message: json['message'] as String,
     );
