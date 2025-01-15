@@ -1,3 +1,4 @@
+import 'package:chrip_aid/member/model/service/member_info_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chrip_aid/common/styles/colors.dart';
@@ -25,14 +26,36 @@ class ChattingMessageScreen extends ConsumerStatefulWidget {
 class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
   final List<Map<String, dynamic>> _messages = [];
   late final SocketService _socketService;
+  late final MemberInfoService memberInfoService;
   String userName = ''; // 사용자 이름만 유지
 
   @override
   void initState() {
     super.initState();
 
+    memberInfoService = ref.read(memberInfoServiceProvider);
+
+    _fetchUserInfo();
     _initializeSocketAndJoinRoom();
   }
+
+  Future<void> _fetchUserInfo() async {
+    try {
+      // MemberInfoService를 사용하여 사용자 정보를 가져옵니다.
+      print("Fetching member info...");
+      final memberInfo = await memberInfoService.getMemberInfo();
+      print("Fetched member info: ${memberInfo.entity}");
+
+      if (mounted) {
+        setState(() {
+          userName = memberInfo.entity?.name ?? "Unknown User";
+        });
+      }
+    } catch (e) {
+      print("Error fetching member info: $e");
+    }
+  }
+
 
   Future<void> _initializeSocketAndJoinRoom() async {
     _socketService = SocketService();
@@ -52,9 +75,11 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
 
   Future<void> _initializeUserDetails() async {
     print("Fetching user details...");
+    final memberInfo = await memberInfoService.getMemberInfo();
+    print("Fetched member info: ${memberInfo.entity}");
     try {
       setState(() {
-        userName = widget.userName;
+        userName = memberInfo.entity?.name ?? "Unknown User";
       });
 
       print("Fetched userName: $userName");
@@ -109,7 +134,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                final isSentByMe = message['sender'] == widget.userName;
+                final isSentByMe = message['sender'] == userName;
                 return _buildChatBubble(isSentByMe, message['content']);
               },
             ),
