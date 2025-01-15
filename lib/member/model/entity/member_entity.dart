@@ -4,11 +4,15 @@ import 'package:chrip_aid/member/model/entity/user_entity.dart';
 abstract class MemberEntity {
   final String email;
   final String name;
+  final String? userId; // user인 경우에만 존재
+  final String? orphanageUserId;
   final OrphanageId? orphanageId; // orphanage일 경우에만 존재
 
   MemberEntity({
     required this.email,
     required this.name,
+    this.orphanageUserId,
+    this.userId,
     this.orphanageId
   });
 

@@ -16,6 +16,8 @@ class UserEntity implements MemberEntity {
   final String name;
   @override
   final OrphanageId? orphanageId;
+  @override
+  final String? orphanageUserId;
   @JsonKey(name: 'nickname')
   final String nickName;
   @JsonKey(name: 'age')
@@ -32,6 +34,9 @@ class UserEntity implements MemberEntity {
   final String phone;
   @JsonKey(name: 'profile_photo')
   final String profileUrl;
+  @override
+  @JsonKey(name : 'user_id')
+  final String userId;
 
   static Sex _sexFromJson(String sex) => Sex.fromString(sex);
 
@@ -51,7 +56,9 @@ class UserEntity implements MemberEntity {
     required this.region,
     required this.phone,
     required this.profileUrl,
-    this.orphanageId
+    this.orphanageId,
+    this.orphanageUserId,
+    required this.userId
   });
 
   @override

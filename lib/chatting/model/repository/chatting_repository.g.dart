@@ -131,8 +131,7 @@ class _ChattingRepository implements ChattingRepository {
   }
 
   @override
-  Future<List<ChatRoomDto>> getChatRoomByOrphanageId(
-      String orphanageUserId) async {
+  Future<List<ChatRoomDto>> getChatRoomByOrphanageId() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
@@ -145,7 +144,7 @@ class _ChattingRepository implements ChattingRepository {
     )
         .compose(
           _dio.options,
-          '/chats/rooms/orphanage-user/${orphanageUserId}',
+          '/chats/rooms/orphanage-user',
           queryParameters: queryParameters,
           data: _data,
         )

@@ -12,15 +12,14 @@ class UserMemberEntity implements MemberEntity {
   @override
   @JsonKey(name: 'name')
   String name;
-  @JsonKey(name: 'orphanage_id')
-  int userId;
-  final OrphanageId? orphanageId;
+  @override
+  @JsonKey(name: 'user_id')
+  String userId;
 
   UserMemberEntity({
     required this.email,
     required this.name,
     required this.userId,
-    this.orphanageId,
   });
 
   @override
@@ -28,4 +27,12 @@ class UserMemberEntity implements MemberEntity {
 
   factory UserMemberEntity.fromJson(Map<String, dynamic> json) =>
       _$UserMemberEntityFromJson(json);
+
+  @override
+  // TODO: implement orphanageId
+  OrphanageId? get orphanageId => throw UnimplementedError();
+
+  @override
+  // TODO: implement orphanageUserId
+  String? get orphanageUserId => throw UnimplementedError();
 }

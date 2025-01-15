@@ -123,7 +123,7 @@ class OrphanageHomeScreen extends TabScreen {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: CustomColor.itemMainColor,
-        onPressed: () => context.go('/chatting'), // GoRouter로 채팅 페이지 이동
+        onPressed: () => context.push('/chatting'), // GoRouter로 채팅 페이지 이동
         child: const Icon(
           Icons.chat_bubble_outline_rounded,
           color: Colors.white,

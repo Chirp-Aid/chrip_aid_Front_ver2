@@ -54,10 +54,10 @@ class ChattingListService {
   }
 
   // 보육원 사용자 ID 기반 채팅방 조회
-  Future<ResponseEntity<List<ChatRoomEntity>>> getChatRoomByOrphanageId(String orphanageUserId) async {
+  Future<ResponseEntity<List<ChatRoomEntity>>> getChatRoomByOrphanageId() async {
     try {
       print('Requesting chat rooms by orphanage user ID from repository...');
-      List<ChatRoomDto> chatRoomDtos = await repository.getChatRoomByOrphanageId(orphanageUserId);
+      List<ChatRoomDto> chatRoomDtos = await repository.getChatRoomByOrphanageId();
       return ResponseEntity.success(entity: chatRoomDtos.map((dto) => dto.toEntity()).toList());
     } catch (e) {
       print('Error while requesting chat rooms by orphanage user ID: $e');

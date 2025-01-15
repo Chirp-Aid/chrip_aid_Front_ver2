@@ -18,6 +18,8 @@ UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => UserEntity(
       orphanageId: json['orphanageId'] == null
           ? null
           : OrphanageId.fromJson(json['orphanageId'] as Map<String, dynamic>),
+      orphanageUserId: json['orphanageUserId'] as String?,
+      userId: json['user_id'] as String,
     );
 
 Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>
@@ -25,10 +27,12 @@ Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>
       'email': instance.email,
       'name': instance.name,
       'orphanageId': instance.orphanageId,
+      'orphanageUserId': instance.orphanageUserId,
       'nickname': instance.nickName,
       'age': instance.age,
       'sex': UserEntity._sexToJson(instance.sex),
       'region': UserEntity._regionToJson(instance.region),
       'phone_number': instance.phone,
       'profile_photo': instance.profileUrl,
+      'user_id': instance.userId,
     };

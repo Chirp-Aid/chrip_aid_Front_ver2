@@ -5,6 +5,7 @@ part 'orphanage_user_entity.g.dart';
 
 @JsonSerializable()
 class OrphanageUserEntity implements MemberEntity {
+  @override
   @JsonKey(name: 'orphanage_user_id')
   final String orphanageUserId;
 
@@ -31,6 +32,10 @@ class OrphanageUserEntity implements MemberEntity {
       _$OrphanageUserEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrphanageUserEntityToJson(this);
+
+  @override
+  // TODO: implement userId
+  String? get userId => throw UnimplementedError();
 }
 
 @JsonSerializable()
