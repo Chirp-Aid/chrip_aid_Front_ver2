@@ -6,36 +6,24 @@ part 'report_entity.g.dart';
 class ReportEntity {
   @JsonKey(name: 'report_id')
   final String reportId;
-
   @JsonKey(name: 'description')
   final String description;
-
   @JsonKey(name: 'reporter_id')
   final String reporterId;
-
   @JsonKey(name: 'reporter_name')
   final String reporterName;
-
   @JsonKey(name: 'reporter_type')
   final String reporterType;
-
   @JsonKey(name: 'target_id')
-  final String? targetId; // null 가능
-
+  final String? targetId;
   @JsonKey(name: 'target_name')
-  final String? targetName; // null 가능
-
+  final String? targetName;
   @JsonKey(name: 'target_type')
-  final String? targetType; // null 가능
-
-  @JsonKey(name: 'board_id')
-  final String? boardId; // null 가능
-
-  @JsonKey(name: 'board_title')
-  final String? boardTitle; // null 가능
-
+  final String? targetType;
   @JsonKey(name: 'board_type')
-  final String? boardType; // null 가능
+  final String? boardType;
+  @JsonKey(name: 'board_content')
+  final String? boardContent;
 
   // 생성자
   ReportEntity({
@@ -47,9 +35,8 @@ class ReportEntity {
     this.targetId,
     this.targetName,
     this.targetType,
-    this.boardId,
-    this.boardTitle,
     this.boardType,
+    this.boardContent,
   });
 
   // JSON -> 객체 변환 (팩토리 메소드)

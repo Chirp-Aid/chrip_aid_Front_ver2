@@ -75,7 +75,7 @@ class AdminReportManagementScreen extends ConsumerWidget {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
                       child: CustomReportList(
-                        title: report.boardTitle ?? report.description,
+                        title: report.description ,
                         reporterName: report.reporterName,
                         targetName: report.targetName ?? report.targetName ?? 'N/A',
                         onTap: () => _navigateToDetailPage(context, report),

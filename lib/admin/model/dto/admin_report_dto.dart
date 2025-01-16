@@ -6,17 +6,26 @@ part 'admin_report_dto.g.dart';
 
 @JsonSerializable()
 class AdminReportDto {
+  @JsonKey(name: 'report_id')
   final String reportId;
+  @JsonKey(name: 'description')
   final String description;
+  @JsonKey(name: 'reporter_id')
   final String reporterId;
+  @JsonKey(name: 'reporter_name')
   final String reporterName;
+  @JsonKey(name: 'reporter_type')
   final String reporterType;
+  @JsonKey(name: 'target_id')
   final String? targetId;
+  @JsonKey(name: 'target_name')
   final String? targetName;
+  @JsonKey(name: 'target_type')
   final String? targetType;
-  final String? boardId;
-  final String? boardTitle;
+  @JsonKey(name: 'board_type')
   final String? boardType;
+  @JsonKey(name: 'board_content')
+  final String? boardContent;
 
   AdminReportDto({
     required this.reportId,
@@ -27,58 +36,28 @@ class AdminReportDto {
     this.targetId,
     this.targetName,
     this.targetType,
-    this.boardId,
-    this.boardTitle,
     this.boardType,
+    this.boardContent,
   });
 
-  // DTO -> Entity 변환 메소드
+  factory AdminReportDto.fromJson(Map<String, dynamic> json) =>
+      _$AdminReportDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AdminReportDtoToJson(this);
+
+  // DTO에서 Entity로 변환
   ReportEntity toEntity() {
     return ReportEntity(
-      reportId: reportId,
+reporterId: reporterId,
       description: description,
-      reporterId: reporterId,
+      reportId: reporterId,
       reporterName: reporterName,
       reporterType: reporterType,
       targetId: targetId,
       targetName: targetName,
       targetType: targetType,
-      boardId: boardId,
-      boardTitle: boardTitle,
       boardType: boardType,
+      boardContent: boardContent,
     );
-  }
-
-  // JSON 직렬화 및 역직렬화 관련 메소드도 추가할 수 있음
-  factory AdminReportDto.fromJson(Map<String, dynamic> json) {
-    return AdminReportDto(
-      reportId: json['report_id'],
-      description: json['description'],
-      reporterId: json['reporter_id'],
-      reporterName: json['reporter_name'],
-      reporterType: json['reporter_type'],
-      targetId: json['target_id'],
-      targetName: json['target_name'],
-      targetType: json['target_type'],
-      boardId: json['board_id'],
-      boardTitle: json['board_title'],
-      boardType: json['board_type'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'report_id': reportId,
-      'description': description,
-      'reporter_id': reporterId,
-      'reporter_name': reporterName,
-      'reporter_type': reporterType,
-      'target_id': targetId,
-      'target_name': targetName,
-      'target_type': targetType,
-      'board_id': boardId,
-      'board_title': boardTitle,
-      'board_type': boardType,
-    };
   }
 }

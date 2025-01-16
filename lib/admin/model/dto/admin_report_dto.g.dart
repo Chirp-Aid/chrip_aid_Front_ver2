@@ -8,30 +8,28 @@ part of 'admin_report_dto.dart';
 
 AdminReportDto _$AdminReportDtoFromJson(Map<String, dynamic> json) =>
     AdminReportDto(
-      reportId: json['reportId'] as String,
+      reportId: json['report_id'] as String,
       description: json['description'] as String,
-      reporterId: json['reporterId'] as String,
-      reporterName: json['reporterName'] as String,
-      reporterType: json['reporterType'] as String,
-      targetId: json['targetId'] as String?,
-      targetName: json['targetName'] as String?,
-      targetType: json['targetType'] as String?,
-      boardId: json['boardId'] as String?,
-      boardTitle: json['boardTitle'] as String?,
-      boardType: json['boardType'] as String?,
+      reporterId: json['reporter_id'] as String,
+      reporterName: json['reporter_name'] as String,
+      reporterType: json['reporter_type'] as String,
+      targetId: json['target_id'] as String?,
+      targetName: json['target_name'] as String?,
+      targetType: json['target_type'] as String?,
+      boardType: json['board_type'] as String?,
+      boardContent: json['board_content'] as String?,
     );
 
 Map<String, dynamic> _$AdminReportDtoToJson(AdminReportDto instance) =>
     <String, dynamic>{
-      'reportId': instance.reportId,
+      'report_id': instance.reportId,
       'description': instance.description,
-      'reporterId': instance.reporterId,
-      'reporterName': instance.reporterName,
-      'reporterType': instance.reporterType,
-      'targetId': instance.targetId,
-      'targetName': instance.targetName,
-      'targetType': instance.targetType,
-      'boardId': instance.boardId,
-      'boardTitle': instance.boardTitle,
-      'boardType': instance.boardType,
+      'reporter_id': instance.reporterId,
+      'reporter_name': instance.reporterName,
+      'reporter_type': instance.reporterType,
+      'target_id': instance.targetId,
+      'target_name': instance.targetName,
+      'target_type': instance.targetType,
+      'board_type': instance.boardType,
+      'board_content': instance.boardContent,
     };

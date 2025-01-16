@@ -15,9 +15,8 @@ ReportEntity _$ReportEntityFromJson(Map<String, dynamic> json) => ReportEntity(
       targetId: json['target_id'] as String?,
       targetName: json['target_name'] as String?,
       targetType: json['target_type'] as String?,
-      boardId: json['board_id'] as String?,
-      boardTitle: json['board_title'] as String?,
       boardType: json['board_type'] as String?,
+      boardContent: json['board_content'] as String?,
     );
 
 Map<String, dynamic> _$ReportEntityToJson(ReportEntity instance) =>
@@ -30,7 +29,6 @@ Map<String, dynamic> _$ReportEntityToJson(ReportEntity instance) =>
       'target_id': instance.targetId,
       'target_name': instance.targetName,
       'target_type': instance.targetType,
-      'board_id': instance.boardId,
-      'board_title': instance.boardTitle,
       'board_type': instance.boardType,
+      'board_content': instance.boardContent,
     };
