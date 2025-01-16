@@ -9,6 +9,7 @@ import 'package:chrip_aid/orphanage/layout/detail_page_layout.dart';
 import 'package:chrip_aid/orphanage/viewmodel/orphange_detail_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class OrphanageDetailScreen extends ConsumerStatefulWidget {
   static String get routeName => 'detailPage';
@@ -59,21 +60,42 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
       child: DetailPageLayout(
         leadingColor: CustomColor.textReverseColor,
         floatingActionButton: SizedBox(
-          height: 70,
+          height: 140,
           width: 70,
-          child: FloatingActionButton(
-            foregroundColor: CustomColor.mainColor,
-            backgroundColor: CustomColor.backGroundSubColor,
-            shape: const CircleBorder(
-              side: BorderSide(color: CustomColor.mainColor, width: 2.0),
-            ),
-            onPressed: () =>
-                viewModel.postOrGoBasket(tabController.index, context),
-            child: Icon(
-              fabIcon,
-              size: kIconLargeSize,
-            ),
+          child:Transform.translate(offset: Offset(0,-10),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  color: CustomColor.itemMainColor,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: () => _navigateToChattingPage(context),
+                  icon: Icon(
+                    Icons.chat_bubble_outline_rounded,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.0,),
+              FloatingActionButton(
+                foregroundColor: CustomColor.mainColor,
+                backgroundColor: CustomColor.backGroundSubColor,
+                shape: const CircleBorder(
+                  side: BorderSide(color: CustomColor.mainColor, width: 2.0),
+                ),
+                onPressed: () =>
+                    viewModel.postOrGoBasket(tabController.index, context),
+                child: Icon(
+                  fabIcon,
+                  size: kIconLargeSize,
+                ),
+              ),
+            ],
           ),
+          )
         ),
         child: ValueStateListener(
           state: viewModel.orphanageDetailState,
@@ -230,6 +252,11 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
           ),
         ),
       ),
+    );
+  }
+  void _navigateToChattingPage(BuildContext context) {
+    context.push(
+      '/chatting',
     );
   }
 }
