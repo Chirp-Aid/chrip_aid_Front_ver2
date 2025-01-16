@@ -176,6 +176,7 @@ class AuthService {
     try {
       print("로그아웃 요청 시작");
       await _removeToken();
+      AuthorityState().success(value: AuthorityType.user);
       print("로그아웃 성공");
       return ResponseEntity.success();
     } catch (e) {
