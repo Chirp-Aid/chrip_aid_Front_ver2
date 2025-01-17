@@ -5,7 +5,7 @@ part 'report_entity.g.dart';
 @JsonSerializable()
 class ReportEntity {
   @JsonKey(name: 'report_id')
-  final String reportId;
+  final int reportId;
   @JsonKey(name: 'description')
   final String description;
   @JsonKey(name: 'reporter_id')

@@ -7,7 +7,7 @@ part 'admin_report_dto.g.dart';
 @JsonSerializable()
 class AdminReportDto {
   @JsonKey(name: 'report_id')
-  final String reportId;
+  final int reportId;
   @JsonKey(name: 'description')
   final String description;
   @JsonKey(name: 'reporter_id')
@@ -48,9 +48,9 @@ class AdminReportDto {
   // DTO에서 Entity로 변환
   ReportEntity toEntity() {
     return ReportEntity(
-reporterId: reporterId,
+      reporterId: reporterId,
       description: description,
-      reportId: reporterId,
+      reportId: reportId,
       reporterName: reporterName,
       reporterType: reporterType,
       targetId: targetId,

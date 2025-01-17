@@ -7,7 +7,7 @@ part of 'report_entity.dart';
 // **************************************************************************
 
 ReportEntity _$ReportEntityFromJson(Map<String, dynamic> json) => ReportEntity(
-      reportId: json['report_id'] as String,
+      reportId: (json['report_id'] as num).toInt(),
       description: json['description'] as String,
       reporterId: json['reporter_id'] as String,
       reporterName: json['reporter_name'] as String,

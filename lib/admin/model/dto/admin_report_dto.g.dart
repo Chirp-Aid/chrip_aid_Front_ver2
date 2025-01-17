@@ -8,7 +8,7 @@ part of 'admin_report_dto.dart';
 
 AdminReportDto _$AdminReportDtoFromJson(Map<String, dynamic> json) =>
     AdminReportDto(
-      reportId: json['report_id'] as String,
+      reportId: (json['report_id'] as num).toInt(),
       description: json['description'] as String,
       reporterId: json['reporter_id'] as String,
       reporterName: json['reporter_name'] as String,
