@@ -31,4 +31,8 @@ abstract class AdminReportmanagementRepository {
   @GET('/admin/reports/desc')
   @Headers({'accessToken': 'true'})
   Future<List<AdminReportDto>> getReportByDescription(@Query('desc') String description);
+
+  @DELETE('/admin/reports/{id}')
+  @Headers({'accessToken': 'true'})
+  Future<AdminReportDto> deleteReport(@Path('id') String id);
 }

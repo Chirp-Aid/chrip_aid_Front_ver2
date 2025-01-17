@@ -80,7 +80,7 @@ class AdminReportManagementScreen extends ConsumerWidget {
                           reporterName: report.reporterName,
                           content: report.boardContent ?? 'N/A',
                           description: report.description,
-                          onDelete: (){},
+                          onDelete: ()=>viewModel.deleteReport(report.reportId.toString()),
                           targetName: report.targetName ?? report.targetName ?? 'N/A',
                           onTap: () => {},
                         ),

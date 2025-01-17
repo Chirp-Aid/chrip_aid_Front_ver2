@@ -47,4 +47,14 @@ class AdminReportmanagementService {
       return ResponseEntity.error(message: e.toString());
     }
   }
+  
+  Future<void> deleteReport(String id) async{
+    try{
+      repository.deleteReport(id);
+      print('delete Successful!');
+    }
+    catch(e){
+      print("'can't delete");
+    }
+  }
 }

@@ -32,4 +32,13 @@ class AdminReportmanagementViewmodel {
       reportsState.error(message: e.toString()); // 에러 발생 시 에러 상태 설정
     }
   }
+
+  Future<void> deleteReport(String id) async{
+    try{
+      _adminReportManagementService.deleteReport(id);
+    }
+    catch(e){
+      print('error $e');
+    }
+  }
 }
