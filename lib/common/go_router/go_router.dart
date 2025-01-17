@@ -39,6 +39,7 @@ import 'package:chrip_aid/post/view/user_post_screen.dart';
 import 'package:chrip_aid/reservation/view/orphanage_reservation_screen.dart';
 import 'package:chrip_aid/reservation/view/reservation_screen.dart';
 import 'package:chrip_aid/reservation/view/user_reservation_screen.dart';
+import 'package:chrip_aid/report/view/report_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -369,6 +370,20 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/alarm',
         builder: (_, __) => const AlarmScreen(), // 하나의 알람 화면으로 이동
+      ),
+      GoRoute(
+        path: '/report',
+        name: ReportScreen.routeName,
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>? ?? {};
+          return ReportScreen(
+            targetId: args['targetId'] as int,
+            targetName: args['targetName'] as String,
+            targetType: args['targetType'] as String,
+            boardType: args['boardType'] as String,
+            boardContent: args['boardContent'] as String,
+          );
+        },
       ),
     ],
     refreshListenable: auth.authState,
