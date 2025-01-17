@@ -23,17 +23,6 @@ class OrphanageManagementScreen extends ConsumerWidget {
       appBarBackgroundColor: Colors.transparent,
       backgroundColor: CustomColor.backgroundMainColor,
       leadingColor: CustomColor.textReverseColor,
-      actions: [
-        IconButton(
-          onPressed: () => managementViewModel.navigateToEditOrphanageScreen(context),
-          icon: const Icon(Icons.edit, size: kIconSmallSize),
-          color: CustomColor.textReverseColor,
-          splashRadius: kIconSmallSize,
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-        ),
-        const SizedBox(width: kPaddingMiddleSize),
-      ],
       child: ValueStateListener(
         state: managementViewModel.orphanageState,
         loadingBuilder: (_, __) =>
@@ -50,12 +39,15 @@ class OrphanageManagementScreen extends ConsumerWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 150,
-                      child: Image.network(
+                      child: state.value?.photo == null ? Image.network(
                         state.value?.photo ?? 'https://via.placeholder.com/150',
                         fit: BoxFit.fitWidth,
                         errorBuilder: (context, error, stackTrace) {
                           return const Icon(Icons.error);
                         },
+                      ) : Container(
+                        color: Colors.grey,
+                        height: 150,
                       ),
                     ),
                     Padding(
