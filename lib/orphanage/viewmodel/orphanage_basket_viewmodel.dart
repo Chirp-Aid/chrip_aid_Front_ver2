@@ -73,29 +73,24 @@ class OrphanageBasketViewModel {
   }
 
   void payment(BuildContext context) async {
-    try {
-      // 기부 요청 실행
-      final response = await _orphanageBasketService.donate(
-        DonateRequestDTO(
-          basketProductIds: _entities!.map((e) => e.basketProductId).toList(),
-          message: '', // 필요하면 메시지를 추가
-        ),
-      );
+    final response = await _orphanageBasketService.donate(
+      DonateRequestDTO(
+        basketProductIds: _entities!.map((e) => e.basketProductId).toList(),
+        message: '', // 필요 시 메시지를 추가
+      ),
+    );
 
-      // 성공 시 OrphanageResultScreen으로 이동
-      if (context.mounted) {
-        context.go(
-          OrphanageResultScreen.routeName,
-          //extra: response.statusCode, // 상태 코드 전달
-        );
-      }
-    } catch (e) {
-      // 오류 처리
-      print("Donation failed: $e");
-      if (context.mounted) {
-        context.go(
-          OrphanageResultScreen.routeName,
-          extra: 0, // 알 수 없는 오류 상태 코드 전달
+    if (context.mounted) {
+      if (response.isSuccess) {
+        // 성공: 후원 성공 페이지로 이동
+        context.go(OrphanageResultScreen.routeName);
+      } else {
+        // 실패: SnackBar로 알림 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.message ?? "후원에 실패했습니다."),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }

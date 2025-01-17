@@ -362,10 +362,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/orphanage_result',
         name: OrphanageResultScreen.routeName,
         builder: (context, state) {
-          final statusCode = state.extra as int? ?? 0; // 상태 코드를 전달
-          return OrphanageResultScreen(statusCode: statusCode);
+          return const OrphanageResultScreen();
         },
       ),
+
       GoRoute(
         path: '/alarm',
         builder: (_, __) => const AlarmScreen(), // 하나의 알람 화면으로 이동
