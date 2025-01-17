@@ -7,6 +7,7 @@ import 'package:chrip_aid/orphanage/model/entity/orphanage_basket_entity.dart';
 import 'package:chrip_aid/orphanage/model/entity/update_basket_item_entity.dart';
 import 'package:chrip_aid/orphanage/model/service/orphanage_basket_service.dart';
 import 'package:chrip_aid/orphanage/model/state/orphanage_detail_state.dart';
+import 'package:chrip_aid/orphanage/view/orphanage_result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -72,19 +73,31 @@ class OrphanageBasketViewModel {
   }
 
   void payment(BuildContext context) async {
-    await kakaoPayReady(
-      "${_entities!.first.productName} 등",
-      _entities!.map((e) => e.count).reduce((value, element) => value + element),
-      _entities!
-          .map((e) => e.count * e.price)
-          .reduce((value, element) => value + element),
-    );
-    await _orphanageBasketService.donate(
-      DonateRequestDTO(
-        basketProductIds: _entities!.map((e) => e.basketProductId).toList(),
-        message: '',
-      ),
-    );
-    if (context.mounted) context.pop();
+    try {
+      // 기부 요청 실행
+      final response = await _orphanageBasketService.donate(
+        DonateRequestDTO(
+          basketProductIds: _entities!.map((e) => e.basketProductId).toList(),
+          message: '', // 필요하면 메시지를 추가
+        ),
+      );
+
+      // 성공 시 OrphanageResultScreen으로 이동
+      if (context.mounted) {
+        context.go(
+          OrphanageResultScreen.routeName,
+          //extra: response.statusCode, // 상태 코드 전달
+        );
+      }
+    } catch (e) {
+      // 오류 처리
+      print("Donation failed: $e");
+      if (context.mounted) {
+        context.go(
+          OrphanageResultScreen.routeName,
+          extra: 0, // 알 수 없는 오류 상태 코드 전달
+        );
+      }
+    }
   }
 }

@@ -29,6 +29,7 @@ import 'package:chrip_aid/management/view/orphanage_management_screen.dart';
 import 'package:chrip_aid/orphanage/view/orphanage_donate_screen.dart';
 import 'package:chrip_aid/orphanage/view/orphanage_map_screen.dart';
 import 'package:chrip_aid/orphanage/view/orphanage_search_screen.dart';
+import 'package:chrip_aid/orphanage/view/orphanage_result_screen.dart';
 import 'package:chrip_aid/post/model/entity/get_posts_entity.dart';
 import 'package:chrip_aid/post/view/orphanage_edit_post_screen.dart';
 import 'package:chrip_aid/post/view/orphanage_post_screen.dart';
@@ -356,6 +357,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
           ),
         ]
+      ),
+      GoRoute(
+        path: '/orphanage_result',
+        name: OrphanageResultScreen.routeName,
+        builder: (context, state) {
+          final statusCode = state.extra as int? ?? 0; // 상태 코드를 전달
+          return OrphanageResultScreen(statusCode: statusCode);
+        },
       ),
       GoRoute(
         path: '/alarm',

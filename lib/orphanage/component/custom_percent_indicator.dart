@@ -25,7 +25,7 @@ class CustomPercentIndicator extends StatelessWidget {
           ),
         ),
         CustomTextField(
-          text: "진행도: ${progress * 100}%",
+          text: "진행도: ${(progress * 100).toStringAsFixed(1)}%", // 소수점 1자리로 포맷
           textSize: 12.0,
           color: Colors.white,
           horizontalMargin: 5.0,
