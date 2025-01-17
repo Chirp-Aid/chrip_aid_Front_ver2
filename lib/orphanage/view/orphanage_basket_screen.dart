@@ -20,6 +20,8 @@ class OrphanageBasketScreen extends ConsumerStatefulWidget {
 
 class OrphanageBasketScreenState extends ConsumerState<OrphanageBasketScreen> {
   late final OrphanageBasketViewModel viewModel;
+  bool isAgreementConfirmed = false;
+
   @override
   void initState() {
     super.initState();
@@ -89,15 +91,20 @@ class OrphanageBasketScreenState extends ConsumerState<OrphanageBasketScreen> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: isAgreementConfirmed
+                              ? () {
+                            viewModel.payment(context);
+                          }
+                              : () {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return NoticeScreen(
                                   onConfirm: () {
-                                    // 팝업에서 확인이 완료되면 결제 진행
-                                    Navigator.pop(context); // 팝업 닫기
-                                    viewModel.payment(context); // 결제 함수 호출
+                                    setState(() {
+                                      isAgreementConfirmed = true;
+                                    });
+                                    Navigator.pop(context);
                                   },
                                 );
                               },
@@ -105,20 +112,21 @@ class OrphanageBasketScreenState extends ConsumerState<OrphanageBasketScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Colors.black,
+                            backgroundColor: isAgreementConfirmed
+                                ? Colors.black
+                                : Colors.grey[700],
                             padding: const EdgeInsets.symmetric(
                               vertical: kPaddingMiddleSize,
                             ),
                           ),
-                          child: const Text(
-                            "구매하기",
+                          child: Text(
+                            isAgreementConfirmed ? "구매하기" : "약관 확인",
                             style: kTextReverseStyleMiddle,
                           ),
                         ),
                       ),
                     ],
-                  )
-
+                  ),
                 ],
               ),
             ),
