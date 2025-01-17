@@ -7,6 +7,7 @@ import 'package:chrip_aid/orphanage/model/entity/orphanage_basket_entity.dart';
 import 'package:chrip_aid/orphanage/model/entity/update_basket_item_entity.dart';
 import 'package:chrip_aid/orphanage/model/service/orphanage_basket_service.dart';
 import 'package:chrip_aid/orphanage/model/state/orphanage_detail_state.dart';
+import 'package:chrip_aid/orphanage/view/orphanage_result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -72,19 +73,26 @@ class OrphanageBasketViewModel {
   }
 
   void payment(BuildContext context) async {
-    await kakaoPayReady(
-      "${_entities!.first.productName} 등",
-      _entities!.map((e) => e.count).reduce((value, element) => value + element),
-      _entities!
-          .map((e) => e.count * e.price)
-          .reduce((value, element) => value + element),
-    );
-    await _orphanageBasketService.donate(
+    final response = await _orphanageBasketService.donate(
       DonateRequestDTO(
         basketProductIds: _entities!.map((e) => e.basketProductId).toList(),
-        message: '',
+        message: '', // 필요 시 메시지를 추가
       ),
     );
-    if (context.mounted) context.pop();
+
+    if (context.mounted) {
+      if (response.isSuccess) {
+        // 성공: 후원 성공 페이지로 이동
+        context.go(OrphanageResultScreen.routeName);
+      } else {
+        // 실패: SnackBar로 알림 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.message ?? "후원에 실패했습니다."),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

@@ -241,12 +241,33 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
                     bottom: kPaddingSmallSize,
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const CustomTextField(
-                          iconData: Icons.description, text: "소개글"),
+                        iconData: Icons.description,
+                        text: "소개글",
+                      ),
+                      const SizedBox(height: 8.0), // 간격 추가
                       Text(
                         state.value!.description,
                         style: kTextContentStyleSmall,
+                      ),
+                      const SizedBox(height: 8.0), // 간격 추가
+                      Align(
+                        alignment: Alignment.centerRight, // 버튼을 오른쪽 정렬
+                        child: IconButton(
+                          icon: const Icon(Icons.report, color: Colors.red),
+                          tooltip: "신고하기",
+                          onPressed: () {
+                            viewModel.goToReportPage(
+                              context,
+                              orphanageId: widget.orphanageId,
+                              orphanageName: viewModel.orphanageDetailState.value?.orphanageName ?? '',
+                              description: viewModel.orphanageDetailState.value?.description ?? '',
+                              boardType: 'orphanage',
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),

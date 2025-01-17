@@ -9,6 +9,7 @@ import 'package:chrip_aid/reservation/model/state/reservation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:chrip_aid/report/view/report_screen.dart';
 
 final orphanageDetailViewModelProvider =
     Provider((ref) => OrphanageDetailViewModel(ref));
@@ -55,5 +56,24 @@ class OrphanageDetailViewModel {
     } else {
       postVisitReservation(orphanageDetailState.value!.orphanageId);
     }
+  }
+
+  void goToReportPage(
+      BuildContext context, {
+        required int orphanageId,
+        required String orphanageName,
+        required String description,
+        required String boardType,
+      }) {
+    context.pushNamed(
+      ReportScreen.routeName,
+      extra: {
+        'targetId': orphanageId,
+        'targetName': orphanageName,
+        'targetType': 'orphanage',
+        'boardType': boardType,
+        'boardContent': description,
+      },
+    );
   }
 }

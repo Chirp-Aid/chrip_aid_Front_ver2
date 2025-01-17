@@ -29,6 +29,7 @@ import 'package:chrip_aid/management/view/orphanage_management_screen.dart';
 import 'package:chrip_aid/orphanage/view/orphanage_donate_screen.dart';
 import 'package:chrip_aid/orphanage/view/orphanage_map_screen.dart';
 import 'package:chrip_aid/orphanage/view/orphanage_search_screen.dart';
+import 'package:chrip_aid/orphanage/view/orphanage_result_screen.dart';
 import 'package:chrip_aid/post/model/entity/get_posts_entity.dart';
 import 'package:chrip_aid/post/view/orphanage_edit_post_screen.dart';
 import 'package:chrip_aid/post/view/orphanage_post_screen.dart';
@@ -38,13 +39,13 @@ import 'package:chrip_aid/post/view/user_post_screen.dart';
 import 'package:chrip_aid/reservation/view/orphanage_reservation_screen.dart';
 import 'package:chrip_aid/reservation/view/reservation_screen.dart';
 import 'package:chrip_aid/reservation/view/user_reservation_screen.dart';
+import 'package:chrip_aid/report/view/report_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../admin/view/admin_screen.dart';
 import '../component/custom_detail_info.dart';
 import 'package:chrip_aid/alarm/view/alarm_screen.dart';
-import '../../notice/view/result_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authProvider);
@@ -360,13 +361,30 @@ final routerProvider = Provider<GoRouter>((ref) {
         ]
       ),
       GoRoute(
+        path: '/orphanage_result',
+        name: OrphanageResultScreen.routeName,
+        builder: (context, state) {
+          return const OrphanageResultScreen();
+        },
+      ),
+
+      GoRoute(
         path: '/alarm',
         builder: (_, __) => const AlarmScreen(), // 하나의 알람 화면으로 이동
       ),
       GoRoute(
-        path: '/result',
-        name: ResultScreen.routeName,
-        builder: (context, state) => const ResultScreen(),
+        path: '/report',
+        name: ReportScreen.routeName,
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>? ?? {};
+          return ReportScreen(
+            targetId: args['targetId'] as int,
+            targetName: args['targetName'] as String,
+            targetType: args['targetType'] as String,
+            boardType: args['boardType'] as String,
+            boardContent: args['boardContent'] as String,
+          );
+        },
       ),
     ],
     refreshListenable: auth.authState,

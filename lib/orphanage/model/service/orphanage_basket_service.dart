@@ -22,6 +22,7 @@ class OrphanageBasketService {
       getOrphanageBasket() async {
     try {
       final data = await repository.getOrphanageBasket();
+      print("Basket Response: ${data.toString()}");
       return ResponseEntity.success(entity: data);
     } catch (e) {
       return ResponseEntity.error(message: e.toString());
@@ -65,7 +66,8 @@ class OrphanageBasketService {
     DonateRequestDTO dto,
   ) async {
     try {
-      await repository.donate(dto);
+      final response = await repository.donate(dto);
+      print("Repository Response: ${response.toString()}"); // 응답 로그 출력
       return getOrphanageBasket();
     } catch (e) {
       return ResponseEntity.error(message: e.toString());
