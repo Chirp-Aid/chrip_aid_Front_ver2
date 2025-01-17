@@ -5,6 +5,8 @@ part 'orphanage_detail_entity.g.dart';
 
 @JsonSerializable()
 class OrphanageDetailEntity {
+  @JsonKey(name: 'orphanage_user_id')
+  final String orphanageUserId;
   @JsonKey(name: 'name')
   final String? name;
   @JsonKey(name: 'orphanage_id')
@@ -25,6 +27,7 @@ class OrphanageDetailEntity {
   final List<RequestItemEntity>? requests;
 
   OrphanageDetailEntity({
+    required this.orphanageUserId,
     required this.orphanageId,
     required this.orphanageName,
     required this.address,

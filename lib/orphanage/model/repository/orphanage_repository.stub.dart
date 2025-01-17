@@ -58,7 +58,7 @@ class OrphanageRepositoryStub implements OrphanageRepository {
           state: 'COMPLETED',
         ),
       ],
-      orphanageId: 1,
+      orphanageId: 1, orphanageUserId: '',
     );
   }
 

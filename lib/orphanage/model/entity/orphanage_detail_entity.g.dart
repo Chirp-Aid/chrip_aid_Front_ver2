@@ -9,6 +9,7 @@ part of 'orphanage_detail_entity.dart';
 OrphanageDetailEntity _$OrphanageDetailEntityFromJson(
         Map<String, dynamic> json) =>
     OrphanageDetailEntity(
+      orphanageUserId: json['orphanage_user_id'] as String,
       orphanageId: (json['orphanage_id'] as num).toInt(),
       orphanageName: json['orphanage_name'] as String,
       address: json['address'] as String,
@@ -25,6 +26,7 @@ OrphanageDetailEntity _$OrphanageDetailEntityFromJson(
 Map<String, dynamic> _$OrphanageDetailEntityToJson(
         OrphanageDetailEntity instance) =>
     <String, dynamic>{
+      'orphanage_user_id': instance.orphanageUserId,
       'name': instance.name,
       'orphanage_id': instance.orphanageId,
       'orphanage_name': instance.orphanageName,

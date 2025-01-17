@@ -83,6 +83,17 @@ class SocketService {
     socket!.emit('createRoom', jsonEncode({'user_id': userId, 'orphanage_user_id': orphanageUserId}));
   }
 
+  // 방 생성 완료 이벤트 수신
+  void onRoomCreated(Function(String roomId) callback) {
+    if (socket == null || !socket!.connected) {
+    print("Socket is not connected. Unable to send message.");
+    return;
+  }
+    socket!.on('roomCreated', (data) {
+      callback(data['roomId']);
+    });
+  }
+
   // 메시지 전송
   void sendMessage(String sender, String type, String joinRoom, String content) {
     if (socket == null || !socket!.connected) {

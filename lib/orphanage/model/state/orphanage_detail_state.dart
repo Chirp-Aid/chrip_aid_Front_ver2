@@ -6,6 +6,8 @@ import 'package:chrip_aid/orphanage/model/entity/orphanage_entity.dart';
 
 class OrphanageListState extends ValueStateNotifier<List<OrphanageEntity>> {}
 
+class OrphanageDetailListState extends ValueStateNotifier<List<OrphanageDetailEntity>> {}
+
 class OrphanageDetailState extends ValueStateNotifier<OrphanageDetailEntity> {}
 
 class OrphanageBasketState extends ValueStateNotifier<List<OrphanageBasketEntity>> {}

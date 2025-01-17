@@ -1,5 +1,8 @@
+import 'package:chrip_aid/auth/model/service/auth_service.dart';
 import 'package:chrip_aid/common/styles/styles.dart';
 import 'package:chrip_aid/common/value_state/component/value_state_listener.dart';
+import 'package:chrip_aid/member/model/entity/member_entity.dart';
+import 'package:chrip_aid/member/model/service/member_info_service.dart';
 import 'package:chrip_aid/orphanage/component/custom_date_picker.dart';
 import 'package:chrip_aid/orphanage/component/custom_product_box.dart';
 import 'package:chrip_aid/orphanage/component/custom_text_field.dart';
@@ -11,11 +14,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../chatting/model/service/socket_service.dart';
+
 class OrphanageDetailScreen extends ConsumerStatefulWidget {
   static String get routeName => 'detailPage';
   final int orphanageId;
+  final String orphanageUserId;
 
-  const OrphanageDetailScreen({super.key, required this.orphanageId});
+  const OrphanageDetailScreen({super.key, required this.orphanageId, required this.orphanageUserId});
 
   @override
   ConsumerState<OrphanageDetailScreen> createState() =>
@@ -28,12 +34,18 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
   IconData fabIcon = Icons.shopping_cart;
   Color tabColor = Colors.white;
   Color tabTextColor = Colors.black;
+  late final MemberInfoService memberInfoService;
+  late String userId='';
 
   late final OrphanageDetailViewModel viewModel;
+  late final SocketService _socketService;
 
   @override
   void initState() {
     super.initState();
+    memberInfoService = ref.read(memberInfoServiceProvider);
+    _fetchUserInfo();
+
     tabController = TabController(length: TABS.length, vsync: this);
     tabController.addListener(() {
       setState(() {
@@ -48,7 +60,47 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
 
     viewModel = ref.read(orphanageDetailViewModelProvider)
       ..getInfo(widget.orphanageId);
+
+
+    // SocketService 초기화
+    _socketService = SocketService();
+    _initializeSocketListeners();
   }
+  Future<void> _initializeSocketListeners() async {
+    await _socketService.initializeSocket(userId);
+    print("Socket initialized successfully!");
+    _socketService.onRoomCreated((roomId) {
+      _navigateToChatRoom(roomId);
+    });
+  }
+
+  void _navigateToChattingPage(BuildContext context) {
+    // 방 생성 요청
+    _socketService.createRoom(userId, widget.orphanageUserId);
+  }
+
+
+  Future<void> _fetchUserInfo() async {
+    try {
+      // MemberInfoService를 사용하여 사용자 정보를 가져옵니다.
+      print("Fetching member info...");
+      final memberInfo = await memberInfoService.getMemberInfo();
+      print("Fetched member info: ${memberInfo.entity}");
+      userId = memberInfo.entity?.userId ?? "Unknown User";
+
+      print('userId : $userId');
+    } catch (e) {
+      print("Error fetching member info: $e");
+    }
+  }
+
+  void _navigateToChatRoom(String roomId) {
+    context.push(
+      '/chatting',
+      extra: {'roomId': roomId},
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -254,9 +306,5 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
       ),
     );
   }
-  void _navigateToChattingPage(BuildContext context) {
-    context.push(
-      '/chatting',
-    );
-  }
+
 }
