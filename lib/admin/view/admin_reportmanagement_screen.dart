@@ -52,38 +52,43 @@ class AdminReportManagementScreen extends ConsumerWidget {
               .where((report) => isUserState ? report.targetType == 'USER' : report.boardType != null)
               .toList();
 
-          if (filteredData.isEmpty) {
+          if (reports.isEmpty) {
             return Center(
               child: Text('데이터가 없습니다.'),
             );
           }
 
           return SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 10.0),
-                CustomToggleButton(
-                  options: ['사용자', '게시글'],
-                  onChanged: (index) {
-                    // isUser 상태 변경 (사용자가 클릭한 토글에 따라 상태 변경)
-                    ref.read(isUserFilterProvider.notifier).state = index == 0;
-                  },
-                ),
-                SizedBox(height: 10.0),
-                Column(
-                  children: filteredData.map((report) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: CustomReportList(
-                        title: report.description ,
-                        reporterName: report.reporterName,
-                        targetName: report.targetName ?? report.targetName ?? 'N/A',
-                        onTap: () => _navigateToDetailPage(context, report),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
+            child: Center(
+              child: Column(
+                children: [
+                  SizedBox(height: 10.0),
+                  CustomToggleButton(
+                    options: ['사용자', '게시글'],
+                    onChanged: (index) {
+                      // isUser 상태 변경 (사용자가 클릭한 토글에 따라 상태 변경)
+                      ref.read(isUserFilterProvider.notifier).state = index == 0;
+                    },
+                  ),
+                  SizedBox(height: 10.0),
+                  Column(
+                    children: filteredData.map((report) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                        child: CustomReportList(
+                          title: report.description ,
+                          reporterName: report.reporterName,
+                          content: report.boardContent ?? 'N/A',
+                          description: report.description,
+                          onDelete: (){},
+                          targetName: report.targetName ?? report.targetName ?? 'N/A',
+                          onTap: () => _navigateToDetailPage(context, report),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
             ),
           );
         },
