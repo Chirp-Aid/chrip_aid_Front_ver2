@@ -44,8 +44,9 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
   void initState() {
     super.initState();
     memberInfoService = ref.read(memberInfoServiceProvider);
-    _fetchUserInfo();
-
+    _fetchUserInfo().then((_) {
+      _initializeSocketAndListeners();
+    });
     tabController = TabController(length: TABS.length, vsync: this);
     tabController.addListener(() {
       setState(() {
@@ -64,20 +65,55 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
 
     // SocketService 초기화
     _socketService = SocketService();
-    _initializeSocketListeners();
   }
+  Future<void> _initializeSocketAndListeners() async {
+    try {
+      // 소켓 초기화
+      _socketService = SocketService();
+      await _socketService.initializeSocket(userId);
+
+      print("Socket initialized successfully!");
+
+      // 이벤트 리스너 설정
+      _initializeSocketListeners();
+    } catch (e) {
+      print("Error initializing socket: $e");
+    }
+  }
+
   Future<void> _initializeSocketListeners() async {
-    await _socketService.initializeSocket(userId);
-    print("Socket initialized successfully!");
-    _socketService.onRoomCreated((roomId) {
-      _navigateToChatRoom(roomId);
-    });
+    try {
+      // 방 생성 이벤트 처리
+      _socketService.onRoomCreated((roomId) {
+        print("Room created: $roomId");
+        _navigateToChatRoom(roomId);
+      });
+
+      // 다른 이벤트 리스너 추가 가능
+      _socketService.socket?.on('connect', (_) {
+        print("Socket connected: ${_socketService.socket?.id}");
+      });
+
+      _socketService.socket?.on('connect_error', (error) {
+        print("Socket connection error: $error");
+      });
+
+      _socketService.socket?.on('disconnect', (_) {
+        print("Socket disconnected");
+      });
+    } catch (e) {
+      print("Error initializing socket listeners: $e");
+    }
   }
 
   void _navigateToChattingPage(BuildContext context) {
-    // 방 생성 요청
-    _socketService.createRoom(userId, widget.orphanageUserId);
+    if (_socketService != null) {
+      _socketService.createRoom(userId, widget.orphanageUserId);
+    } else {
+      print("Socket is not connected. Cannot create room.");
+    }
   }
+
 
 
   Future<void> _fetchUserInfo() async {
@@ -117,18 +153,16 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
           child:Transform.translate(offset: Offset(0,-10),
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.all(5.0),
-                decoration: BoxDecoration(
-                  color: CustomColor.itemMainColor,
-                  shape: BoxShape.circle,
+              FloatingActionButton(
+                foregroundColor: CustomColor.mainColor,
+                backgroundColor: CustomColor.backGroundSubColor,
+                shape: const CircleBorder(
+                  side: BorderSide(color: CustomColor.mainColor, width: 2.0),
                 ),
-                child: IconButton(
-                  onPressed: () => _navigateToChattingPage(context),
-                  icon: Icon(
-                    Icons.chat_bubble_outline_rounded,
-                    color: Colors.white,
-                  ),
+                onPressed: () => _navigateToChattingPage(context),
+                child: Icon(
+                  Icons.add_comment,
+                  size: kIconLargeSize,
                 ),
               ),
               SizedBox(height: 10.0,),
