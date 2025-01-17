@@ -22,7 +22,7 @@ class AdminReportManagementScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.read(adminReportManagementViewModelProvider);
     final reportsState = ref.watch(adminReportManagementViewModelProvider).reportsState;
-    final isUserState = ref.watch(isUserFilterProvider);
+    final isChattingState = ref.watch(isChattingTextProvider);
 
     // 화면이 처음 로드될 때 데이터 가져오기
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,7 +49,7 @@ class AdminReportManagementScreen extends ConsumerWidget {
 
           // 사용자/게시글 필터링된 데이터
           final filteredData = reports
-              .where((report) => isUserState ? report.targetType == 'USER' : report.boardType != null)
+              .where((report) => isChattingState ? report.boardType == 'CHAT' : report.boardType != 'CHAT')
               .toList();
 
           if (reports.isEmpty) {
@@ -64,10 +64,10 @@ class AdminReportManagementScreen extends ConsumerWidget {
                 children: [
                   SizedBox(height: 10.0),
                   CustomToggleButton(
-                    options: ['사용자', '게시글'],
+                    options: ['채팅', '게시글'],
                     onChanged: (index) {
                       // isUser 상태 변경 (사용자가 클릭한 토글에 따라 상태 변경)
-                      ref.read(isUserFilterProvider.notifier).state = index == 0;
+                      ref.read(isChattingTextProvider.notifier).state = index == 0;
                     },
                   ),
                   SizedBox(height: 10.0),
@@ -82,7 +82,7 @@ class AdminReportManagementScreen extends ConsumerWidget {
                           description: report.description,
                           onDelete: (){},
                           targetName: report.targetName ?? report.targetName ?? 'N/A',
-                          onTap: () => _navigateToDetailPage(context, report),
+                          onTap: () => {},
                         ),
                       );
                     }).toList(),
@@ -101,14 +101,9 @@ class AdminReportManagementScreen extends ConsumerWidget {
       ),
     );
   }
-
-  void _navigateToDetailPage(BuildContext context, dynamic reportData) {
-    context.push(
-      '/supervisor/reportmanagement/detail',
-      extra: reportData,
-    );
-  }
 }
 
 // isUser 필터 상태 관리
 final isUserFilterProvider = StateProvider<bool>((ref) => true);
+
+final isChattingTextProvider = StateProvider<bool>((ref) => true);
