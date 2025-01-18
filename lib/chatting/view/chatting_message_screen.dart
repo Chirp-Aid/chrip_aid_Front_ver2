@@ -9,6 +9,7 @@ import '../model/service/socket_service.dart';
 class ChattingMessageScreen extends ConsumerStatefulWidget {
   final String chatRoomId;
   final String targetId;
+  final String targetName;
   final String userId;
   final String userName;
 
@@ -16,6 +17,7 @@ class ChattingMessageScreen extends ConsumerStatefulWidget {
     Key? key,
     required this.chatRoomId,
     required this.targetId,
+    required this.targetName,
     required this.userId,
     required this.userName,
   }) : super(key: key);
@@ -89,7 +91,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
 
     return DetailPageLayout(
       extendBodyBehindAppBar: false,
-      title: widget.targetId,
+      title: widget.targetName,
       titleColor: Colors.white,
       appBarBackgroundColor: CustomColor.buttonMainColor,
       backgroundColor: CustomColor.backgroundMainColor,
