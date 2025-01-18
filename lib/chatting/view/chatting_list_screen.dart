@@ -106,6 +106,7 @@ class _ChattingListScreenState extends ConsumerState<ChattingListScreen> {
                         userId: room.user.userId,
                         userName: room.user.name,
                         targetId: room.orphanageUser.orphanageUserId,
+                        targetName: room.orphanageUser.name,
                       );
                     },
                   );

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chrip_aid/common/styles/colors.dart';
 import 'package:chrip_aid/orphanage/layout/detail_page_layout.dart';
+import '../model/notifier/chat_message_notifier.dart';
 import '../model/service/socket_service.dart';
 
 class ChattingMessageScreen extends ConsumerStatefulWidget {
   final String chatRoomId;
   final String targetId;
+  final String targetName;
   final String userId;
   final String userName;
 
@@ -15,6 +17,7 @@ class ChattingMessageScreen extends ConsumerStatefulWidget {
     Key? key,
     required this.chatRoomId,
     required this.targetId,
+    required this.targetName,
     required this.userId,
     required this.userName,
   }) : super(key: key);
@@ -24,10 +27,9 @@ class ChattingMessageScreen extends ConsumerStatefulWidget {
 }
 
 class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
-  final List<Map<String, dynamic>> _messages = [];
   late final SocketService _socketService;
   late final MemberInfoService memberInfoService;
-  String userName = ''; // 사용자 이름만 유지
+  String userName = '';
 
   @override
   void initState() {
@@ -41,11 +43,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
 
   Future<void> _fetchUserInfo() async {
     try {
-      // MemberInfoService를 사용하여 사용자 정보를 가져옵니다.
-      print("Fetching member info...");
       final memberInfo = await memberInfoService.getMemberInfo();
-      print("Fetched member info: ${memberInfo.entity}");
-
       if (mounted) {
         setState(() {
           userName = memberInfo.entity?.name ?? "Unknown User";
@@ -56,62 +54,32 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     }
   }
 
-
   Future<void> _initializeSocketAndJoinRoom() async {
     _socketService = SocketService();
 
-    // 소켓 연결 완료 대기
     await _socketService.initializeSocket(widget.userId);
     print("Socket initialized successfully!");
 
-    // 소켓 연결 후 채팅방 입장
     _socketService.joinRoom(widget.chatRoomId);
-
-    // 이벤트 리스너 등록
     _initializeSocketListeners();
-
-    _initializeUserDetails();
-  }
-
-  Future<void> _initializeUserDetails() async {
-    print("Fetching user details...");
-    final memberInfo = await memberInfoService.getMemberInfo();
-    print("Fetched member info: ${memberInfo.entity}");
-    try {
-      setState(() {
-        userName = memberInfo.entity?.name ?? "Unknown User";
-      });
-
-      print("Fetched userName: $userName");
-    } catch (e) {
-      print("Error fetching user details: $e");
-    }
   }
 
   void _initializeSocketListeners() {
-    print("Initializing socket listeners...");
-    // 새로운 메시지 수신 이벤트 처리
     _socketService.onNewMessage((message) {
       print("New message received: $message");
-      setState(() {
-        _messages.add(message);
-      });
+      ref.read(chatMessagesProvider.notifier).addMessage(message); // 메시지 추가
     });
 
-    // roomMessages 이벤트 처리
-    _socketService.socket!.on('roomMessages', (data) {
+    _socketService.socket?.on('roomMessages', (data) {
       print("Room messages received: $data");
-      setState(() {
-        // roomMessages 데이터를 _messages에 추가
-        final List<Map<String, dynamic>> messages = List<Map<String, dynamic>>.from(data);
-        _messages.addAll(messages);
-      });
+      final List<Map<String, dynamic>> messages =
+      List<Map<String, dynamic>>.from(data);
+      ref.read(chatMessagesProvider.notifier).addMessages(messages); // 여러 메시지 추가
     });
   }
 
   @override
   void dispose() {
-    print("Leaving room: ${widget.chatRoomId}");
     _socketService.leaveRoom(widget.chatRoomId);
     _socketService.disconnect();
     super.dispose();
@@ -119,9 +87,11 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final messages = ref.watch(chatMessagesProvider); // 메시지 상태 가져오기
+
     return DetailPageLayout(
       extendBodyBehindAppBar: false,
-      title: widget.targetId,
+      title: widget.targetName,
       titleColor: Colors.white,
       appBarBackgroundColor: CustomColor.buttonMainColor,
       backgroundColor: CustomColor.backgroundMainColor,
@@ -131,9 +101,9 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              itemCount: _messages.length,
+              itemCount: messages.length,
               itemBuilder: (context, index) {
-                final message = _messages[index];
+                final message = messages[index];
                 final isSentByMe = message['sender'] == userName;
                 return _buildChatBubble(isSentByMe, message['content']);
               },
@@ -170,8 +140,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
   }
 }
 
-
-class _BottomInputField extends StatefulWidget {
+class _BottomInputField extends ConsumerWidget {
   final String chatRoomId;
   final SocketService socketService;
   final String userName;
@@ -184,35 +153,26 @@ class _BottomInputField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<_BottomInputField> createState() => _BottomInputFieldState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController _controller = TextEditingController();
 
-class _BottomInputFieldState extends State<_BottomInputField> {
-  final TextEditingController _controller = TextEditingController();
+    void _sendMessage() {
+      if (_controller.text.trim().isNotEmpty) {
+        final messageContent = _controller.text;
 
-  void _sendMessage() {
-    if (_controller.text.trim().isNotEmpty) {
-      final messageContent = _controller.text;
-      print("Sending message: $messageContent");
+        // 메시지 전송
+        socketService.sendMessage(
+          userName,
+          "USER", // 사용자 타입은 고정된 문자열로 설정
+          chatRoomId,
+          messageContent,
+        );
 
-      // 메시지 전송
-      widget.socketService.sendMessage(
-        widget.userName,
-        "USER", // 사용자 타입은 고정된 문자열로 설정
-        widget.chatRoomId,
-        messageContent,
-      );
-
-      // 메시지 입력 필드 초기화
-      _controller.clear();
-    } else {
-      print("Message content is empty, nothing to send.");
+        // 입력 필드 초기화
+        _controller.clear();
+      }
     }
-  }
 
-
-  @override
-  Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
@@ -223,7 +183,8 @@ class _BottomInputFieldState extends State<_BottomInputField> {
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: 'Enter your message...',
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide.none,

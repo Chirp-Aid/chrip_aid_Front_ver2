@@ -353,9 +353,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               final chatRoomId = state.pathParameters['chat_room_id']!;
               final extra = state.extra as Map<String, dynamic>?;
               final targetId = extra?['targetId'] as String? ?? 'Unknown';
+              final targetName = extra?['targetName'] as String? ?? 'Unknown';
               final userId = extra?['userId'] as String? ?? 'Unknown';
               final userName = extra?['userName'] as String? ?? 'Unknown';
-              return ChattingMessageScreen(chatRoomId: chatRoomId, targetId: targetId, userId: userId,userName: userName,);
+              return ChattingMessageScreen(chatRoomId: chatRoomId, targetId: targetId, targetName: targetName, userId: userId,userName: userName,);
             },
           ),
         ]
