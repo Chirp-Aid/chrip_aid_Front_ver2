@@ -155,7 +155,7 @@ class OrphanageSearchViewModel {
     FocusManager.instance.primaryFocus?.unfocus();
     context.pushNamed(
       OrphanageDetailScreen.routeName,
-      extra: orphanageState.value!.first.orphanageId,
+      extra: orphanageState.value!.first,
     );
   }
 
