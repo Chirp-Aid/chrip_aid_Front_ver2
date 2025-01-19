@@ -44,9 +44,7 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
   void initState() {
     super.initState();
     memberInfoService = ref.read(memberInfoServiceProvider);
-    _fetchUserInfo().then((_) {
-      _initializeSocketAndListeners();
-    });
+    _fetchUserInfo();
     tabController = TabController(length: TABS.length, vsync: this);
     tabController.addListener(() {
       setState(() {
@@ -66,53 +64,55 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
     // SocketService 초기화
     _socketService = SocketService();
   }
-  Future<void> _initializeSocketAndListeners() async {
+
+  void _navigateToChattingPage(BuildContext context) async {
     try {
-      // 소켓 초기화
-      _socketService = SocketService();
-      await _socketService.initializeSocket(userId);
+      // Ensure _socketService is initialized
+      if (_socketService == null) {
+        print("SocketService is not initialized. Initializing now...");
+        _socketService = SocketService();
+      }
 
-      print("Socket initialized successfully!");
+      // Ensure any existing socket connection is terminated
+      if (_socketService.socket != null && _socketService.socket!.connected) {
+        print("Terminating existing socket connection...");
+        _socketService.disconnect(); // 연결 종료
+      }
 
-      // 이벤트 리스너 설정
-      _initializeSocketListeners();
-    } catch (e) {
-      print("Error initializing socket: $e");
-    }
-  }
+      // Ensure the socket is connected
+      if (_socketService.socket == null || !_socketService.socket!.connected) {
+        print("Socket is not connected. Connecting now...");
+        await _socketService.initializeSocket(userId);
+        print("Socket connected successfully.");
+      }
 
-  Future<void> _initializeSocketListeners() async {
-    try {
-      // 방 생성 이벤트 처리
-      _socketService.onRoomCreated((roomId) {
-        print("Room created: $roomId");
-        _navigateToChatRoom(roomId);
-      });
-
-      // 다른 이벤트 리스너 추가 가능
-      _socketService.socket?.on('connect', (_) {
-        print("Socket connected: ${_socketService.socket?.id}");
-      });
-
-      _socketService.socket?.on('connect_error', (error) {
-        print("Socket connection error: $error");
-      });
-
-      _socketService.socket?.on('disconnect', (_) {
-        print("Socket disconnected");
-      });
-    } catch (e) {
-      print("Error initializing socket listeners: $e");
-    }
-  }
-
-  void _navigateToChattingPage(BuildContext context) {
-    if (_socketService != null) {
+      // Create room
+      print("Creating chat room...");
       _socketService.createRoom(userId, widget.orphanageUserId);
-    } else {
-      print("Socket is not connected. Cannot create room.");
+
+      // Listen for room creation and navigate
+      _socketService.onRoomCreated((roomId) {
+        print("Room created successfully: $roomId");
+
+        // Navigate to the chat room
+        context.push(
+          '/chatting',
+          extra: {'roomId': roomId},
+        );
+
+        // After navigation, disconnect the socket
+        print("Disconnecting socket after navigation...");
+        _socketService.disconnect();
+      });
+    } catch (e) {
+      print("Error during navigation: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to create or join chat room. Please try again.")),
+      );
     }
   }
+
+
 
 
 

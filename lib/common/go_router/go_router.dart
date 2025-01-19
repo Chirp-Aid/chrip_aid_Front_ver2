@@ -15,6 +15,7 @@ import 'package:chrip_aid/common/component/custom_detail_report_info.dart';
 import 'package:chrip_aid/common/utils/log_util.dart';
 import 'package:chrip_aid/home/view/admin_home_screen.dart';
 import 'package:chrip_aid/member/model/entity/user_detail_entity.dart';
+import 'package:chrip_aid/orphanage/model/entity/orphanage_entity.dart';
 import 'package:chrip_aid/root_tab/view/root_tab_screen.dart';
 import 'package:chrip_aid/common/view/splash_screen.dart';
 import 'package:chrip_aid/management/model/dto/add_orphanage_product_request_dto.dart';
@@ -115,10 +116,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'detail',
                 name: OrphanageDetailScreen.routeName,
-                builder: (context, state) => OrphanageDetailScreen(
-                  orphanageUserId: "hi",
-                  orphanageId: state.extra as int,
-                ),
+                builder: (context, state) {
+                  final orphanage = state.extra as OrphanageEntity;
+                    return OrphanageDetailScreen(
+                  orphanageUserId: orphanage.orphanageUserId as String,
+                  orphanageId: orphanage.orphanageId,
+                );
+                    },
                 routes: [
                   GoRoute(
                     path: 'basket',

@@ -79,6 +79,8 @@ class SocketService {
       print("Socket is not connected. Unable to create room.");
       return;
     }
+    print('userId : $userId');
+    print('orphanageId : $orphanageUserId');
 
     socket!.emit('createRoom', jsonEncode({'user_id': userId, 'orphanage_user_id': orphanageUserId}));
   }
