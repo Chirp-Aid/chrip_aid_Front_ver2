@@ -60,11 +60,27 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     await _socketService.initializeSocket(widget.userId);
     print("Socket initialized successfully!");
 
+    await _fetchRoomMessages(widget.chatRoomId);
+
+    ref.read(chatMessagesProvider.notifier).clearMessages();
+
     _socketService.joinRoom(widget.chatRoomId);
     _initializeSocketListeners();
   }
+  Future<void> _fetchRoomMessages(String roomId) async {
+    _socketService.socket?.emit('fetchRoomMessages', {'roomId': roomId});
+
+    _socketService.socket?.on('roomMessages', (data) {
+      print("Room messages received: $data");
+      final List<Map<String, dynamic>> messages =
+      List<Map<String, dynamic>>.from(data);
+      ref.read(chatMessagesProvider.notifier).addMessages(messages);
+    });
+  }
 
   void _initializeSocketListeners() {
+    _socketService.socket?.off('newMessage');
+    _socketService.socket?.off('roomMessages');
     _socketService.onNewMessage((message) {
       print("New message received: $message");
       ref.read(chatMessagesProvider.notifier).addMessage(message); // 메시지 추가
