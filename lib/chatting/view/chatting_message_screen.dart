@@ -57,6 +57,11 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
   Future<void> _initializeSocketAndJoinRoom() async {
     _socketService = SocketService();
 
+    print('userId : ${widget.userId}');
+    print('userName : ${widget.userName}');
+    print('targetId : ${widget.targetId}');
+    print('targetName : ${widget.targetName}');
+
     await _socketService.initializeSocket(widget.userId);
     print("Socket initialized successfully!");
 
