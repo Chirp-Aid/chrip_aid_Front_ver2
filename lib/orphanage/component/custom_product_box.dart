@@ -63,76 +63,101 @@ class CustomProductBox extends ConsumerWidget {
       progress: progress,
     );
 
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: kPaddingMiddleSize,
-        vertical: kPaddingSmallSize,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            child: Container(
-              width: 90,
-              height: 90,
-              decoration: const BoxDecoration(
-                color: Colors.grey,
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kPaddingMiddleSize,
+            vertical: kPaddingSmallSize,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Container(
+                  width: 90,
+                  height: 90,
+                  decoration: const BoxDecoration(
+                    color: Colors.grey,
+                  ),
+                  child: Image.network(
+                    product.photo,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              child: Image.network(
-                product.photo,
-                fit: BoxFit.cover,
+              const SizedBox(width: 5),
+              Expanded(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomFieldPadding(
+                              text: product.name,
+                              textSize: 14.0,
+                            ),
+                            CustomFieldPadding(
+                              text: product.description,
+                              color: CustomColor.contentSubColor,
+                            ),
+                            CustomFieldPadding(
+                              text: "가격 : ${product.price}원",
+                              color: CustomColor.contentSubColor,
+                            ),
+                            CustomFieldPadding(
+                              text:
+                              '요청 개수: ${product.requestCount}개  후원 개수: ${product.supportCount}개',
+                              color: CustomColor.contentSubColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          const SizedBox(height: 8.0),
+                          if (product.progress < 1.0)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: CustomBottomSheet(
+                                requestId: product.requiredId,
+                                name: product.name,
+                                price: product.price,
+                              ),
+                            ),
+                          const SizedBox(
+                            height: 48.0, // Retain existing spacing
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  CustomPercentIndicator(progress: product.progress),
+                ]),
+              ),
+            ],
+          ),
+        ),
+        if (product.progress >= 1.0)
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.8), // Semi-transparent overlay
+              child: Center(
+                child: Text(
+                  '모금 완료',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffff7f79),
+                  ),
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 5),
-          Expanded(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomFieldPadding(
-                          text: product.name,
-                          textSize: 14.0,
-                        ),
-                        CustomFieldPadding(
-                          text: product.description,
-                          color: CustomColor.contentSubColor,
-                        ),
-                        CustomFieldPadding(
-                          text: "가격 : ${product.price}원",
-                          color: CustomColor.contentSubColor,
-                        ),
-                        CustomFieldPadding(
-                          text:
-                              '요청 개수: ${product.requestCount}개  후원 개수: ${product.supportCount}개',
-                          color: CustomColor.contentSubColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      CustomBottomSheet(
-                        requestId: product.requiredId,
-                        name: product.name,
-                        price: product.price,
-                      ),
-                      const SizedBox(
-                        height: 48.0,
-                      )
-                    ],
-                  )
-                ],
-              ),
-              CustomPercentIndicator(progress: product.progress),
-            ]),
-          ),
-        ],
-      ),
+      ],
     );
   }
 }
@@ -144,9 +169,9 @@ class CustomBottomSheet extends ConsumerStatefulWidget {
 
   const CustomBottomSheet(
       {required this.requestId,
-      required this.name,
-      required this.price,
-      super.key});
+        required this.name,
+        required this.price,
+        super.key});
 
   @override
   CustomBottomSheetState createState() => CustomBottomSheetState();
@@ -164,7 +189,7 @@ class CustomBottomSheetState extends ConsumerState<CustomBottomSheet> {
     return IconButton(
         padding: EdgeInsets.zero,
         constraints: const BoxConstraints(),
-        icon: const Icon(Icons.shopping_cart, size: kIconXSmallSize),
+        icon: const Icon(Icons.add_shopping_cart, size: kIconMainSize),
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -199,7 +224,7 @@ class CustomBottomSheetState extends ConsumerState<CustomBottomSheet> {
                           /** 상품 이름 **/
                           Padding(
                             padding:
-                                const EdgeInsets.only(left: kPaddingSmallSize),
+                            const EdgeInsets.only(left: kPaddingSmallSize),
                             child: Row(
                               children: [
                                 Text(
@@ -220,12 +245,12 @@ class CustomBottomSheetState extends ConsumerState<CustomBottomSheet> {
                                   onPressed: _counter == 1
                                       ? null
                                       : () {
-                                          bottomState(() {
-                                            setState(() {
-                                              _counter--;
-                                            });
-                                          });
-                                        },
+                                    bottomState(() {
+                                      setState(() {
+                                        _counter--;
+                                      });
+                                    });
+                                  },
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                     side: const BorderSide(
