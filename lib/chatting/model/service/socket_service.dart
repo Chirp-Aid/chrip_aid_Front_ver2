@@ -92,7 +92,7 @@ class SocketService {
     return;
   }
     socket!.on('roomCreated', (data) {
-      callback(data['roomId']);
+      callback(data['room_id']);
     });
   }
 
@@ -136,7 +136,7 @@ class SocketService {
 
     print("Attempting to join room: $roomId");
 
-    socket!.emit('joinRoom', jsonEncode({'roomId': roomId}));
+    socket!.emit('joinRoom', jsonEncode({'room_id': roomId}));
   }
 
 
@@ -147,7 +147,7 @@ class SocketService {
       return;
     }
 
-    socket!.emit('leaveRoom', jsonEncode({'roomId': roomId}));
+    socket!.emit('leaveRoom', jsonEncode({'room_id': roomId}));
   }
 
   // 연결 해제 및 리스너 정리
