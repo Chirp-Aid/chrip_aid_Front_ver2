@@ -8,7 +8,7 @@ class ReportDTO {
   final String description;
 
   @JsonKey(name: 'target_id') // 대상 ID
-  final int targetId;
+  final String targetId;
 
   @JsonKey(name: 'target_name') // 대상 이름
   final String targetName;
@@ -36,4 +36,15 @@ class ReportDTO {
       _$ReportDTOFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReportDTOToJson(this);
+
+  ReportDTO toDto() {
+    return ReportDTO(
+      description: description,
+      targetId: targetId,
+      targetName: targetName,
+      targetType: targetType,
+      boardType: boardType,
+      boardContent: boardContent,
+    );
+  }
 }

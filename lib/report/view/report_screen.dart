@@ -5,7 +5,7 @@ import '../viewmodel/report_viewmodel.dart';
 class ReportScreen extends ConsumerWidget {
   static String get routeName => 'reportPage';
 
-  final int targetId;
+  final String targetId;
   final String targetName;
   final String targetType;
   final String boardType;
@@ -22,7 +22,8 @@ class ReportScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(reportViewModelProvider);
+    final viewModel = ref.read(reportViewModelProvider);
+    final TextEditingController descriptionController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +66,7 @@ class ReportScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8.0),
             TextField(
-              controller: viewModel.descriptionController,
+              controller: descriptionController,
               decoration: const InputDecoration(
                 hintText: '신고 사유를 입력하세요.',
                 border: OutlineInputBorder(),
@@ -89,14 +90,34 @@ class ReportScreen extends ConsumerWidget {
                   ),
                 ),
                 onPressed: () async {
-                  await viewModel.submitReport(
-                    targetId: targetId,
-                    targetName: targetName,
-                    targetType: targetType,
-                    boardType: boardType,
-                    boardContent: boardContent,
-                  );
-                  Navigator.pop(context); // 성공 시 화면 종료
+                  try {
+                    await viewModel.sendReport(
+                      description: descriptionController.text,
+                      targetId: targetId.toString(),
+                      targetName: targetName,
+                      targetType: targetType,
+                      boardType: boardType,
+                      boardContent: boardContent,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('신고가 성공적으로 접수되었습니다.')),
+                    );
+                    Navigator.pop(context); // 성공 시 화면 종료
+                  } catch (e) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('신고 실패'),
+                        content: Text('오류 내용: ${e.toString()}'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 },
                 child: const Text(
                   '신고하기',

@@ -4,10 +4,10 @@ import 'package:chrip_aid/common/value_state/component/value_state_listener.dart
 import 'package:chrip_aid/orphanage/component/custom_basket_product_box.dart';
 import 'package:chrip_aid/orphanage/layout/detail_page_layout.dart';
 import 'package:chrip_aid/orphanage/viewmodel/orphanage_basket_viewmodel.dart';
+import 'package:chrip_aid/orphanage/view/orphanage_notice_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:chrip_aid/notice/view/notice_screen.dart';
 
 class OrphanageBasketScreen extends ConsumerStatefulWidget {
   static String get routeName => 'basket';
@@ -99,7 +99,7 @@ class OrphanageBasketScreenState extends ConsumerState<OrphanageBasketScreen> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return NoticeScreen(
+                                return OrphanageNoticeScreen(
                                   onConfirm: () {
                                     setState(() {
                                       isAgreementConfirmed = true;

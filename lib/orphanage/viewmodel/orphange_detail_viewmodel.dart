@@ -60,19 +60,22 @@ class OrphanageDetailViewModel {
 
   void goToReportPage(
       BuildContext context, {
-        required int orphanageId,
-        required String orphanageName,
         required String description,
+        required String targetId,
+        required String targetName,
+        required String targetType,
         required String boardType,
+        required String boardContent,
       }) {
     context.pushNamed(
       ReportScreen.routeName,
       extra: {
-        'targetId': orphanageId,
-        'targetName': orphanageName,
-        'targetType': 'orphanage',
+        'description': description,
+        'targetId': targetId,
+        'targetName': targetName,
+        'targetType': targetType,
         'boardType': boardType,
-        'boardContent': description,
+        'boardContent': boardContent,
       },
     );
   }

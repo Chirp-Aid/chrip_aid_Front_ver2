@@ -371,13 +371,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/alarm',
         builder: (_, __) => const AlarmScreen(), // 하나의 알람 화면으로 이동
       ),
+
       GoRoute(
         path: '/report',
         name: ReportScreen.routeName,
         builder: (context, state) {
           final args = state.extra as Map<String, dynamic>? ?? {};
           return ReportScreen(
-            targetId: args['targetId'] as int,
+            targetId: args['targetId'] as String,
             targetName: args['targetName'] as String,
             targetType: args['targetType'] as String,
             boardType: args['boardType'] as String,
