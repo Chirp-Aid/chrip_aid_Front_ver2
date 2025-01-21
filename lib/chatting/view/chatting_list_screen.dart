@@ -62,6 +62,7 @@ class _ChattingListScreenState extends ConsumerState<ChattingListScreen> {
   @override
   Widget build(BuildContext context) {
     final chatRooms = ref.watch(chatRoomsProvider);
+    final memberAuth = AuthorityState();
 
     return DetailPageLayout(
       extendBodyBehindAppBar: false,
@@ -103,10 +104,10 @@ class _ChattingListScreenState extends ConsumerState<ChattingListScreen> {
                       return CustomChatsList(
                         chat_room_id: room.chatRoomId,
                         name: room.orphanageUser.name,
-                        userId: room.user.userId,
-                        userName: room.user.name,
-                        targetId: room.orphanageUser.orphanageUserId,
-                        targetName: room.orphanageUser.name,
+                        userId: memberAuth.value.toString()=='users'? room.user.userId : room.orphanageUser.orphanageUserId,
+                        userName: memberAuth.value.toString()=='users'? room.user.name : room.orphanageUser.name,
+                        targetId: memberAuth.value.toString()=='users'? room.orphanageUser.orphanageUserId : room.user.userId,
+                        targetName: memberAuth.value.toString()=='users'? room.orphanageUser.name : room.user.name,
                       );
                     },
                   );

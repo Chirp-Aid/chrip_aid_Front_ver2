@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chrip_aid/common/styles/colors.dart';
 import 'package:chrip_aid/orphanage/layout/detail_page_layout.dart';
+import '../../auth/model/state/authority_state.dart';
 import '../model/notifier/chat_message_notifier.dart';
 import '../model/service/socket_service.dart';
 
@@ -56,6 +57,11 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
 
   Future<void> _initializeSocketAndJoinRoom() async {
     _socketService = SocketService();
+
+    print('userId : ${widget.userId}');
+    print('userName : ${widget.userName}');
+    print('targetId : ${widget.targetId}');
+    print('targetName : ${widget.targetName}');
 
     await _socketService.initializeSocket(widget.userId);
     print("Socket initialized successfully!");
@@ -175,11 +181,12 @@ class _BottomInputField extends ConsumerWidget {
     void _sendMessage() {
       if (_controller.text.trim().isNotEmpty) {
         final messageContent = _controller.text;
+        final memberAuth = AuthorityState();
 
         // 메시지 전송
         socketService.sendMessage(
           userName,
-          "USER", // 사용자 타입은 고정된 문자열로 설정
+          memberAuth.value.toString()=='users'?'USER':'ORPHANAGE',
           chatRoomId,
           messageContent,
         );
