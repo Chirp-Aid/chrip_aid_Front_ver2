@@ -104,10 +104,10 @@ class _ChattingListScreenState extends ConsumerState<ChattingListScreen> {
                       return CustomChatsList(
                         chat_room_id: room.chatRoomId,
                         name: room.orphanageUser.name,
-                        userId: memberAuth.value.toString()=='user'? room.user.userId : room.orphanageUser.orphanageUserId,
-                        userName: memberAuth.value.toString()=='user'? room.user.name : room.orphanageUser.name,
-                        targetId: memberAuth.value.toString()=='user'? room.orphanageUser.orphanageUserId : room.user.userId,
-                        targetName: memberAuth.value.toString()=='user'? room.orphanageUser.name : room.user.name,
+                        userId: memberAuth.value.toString()=='users'? room.user.userId : room.orphanageUser.orphanageUserId,
+                        userName: memberAuth.value.toString()=='users'? room.user.name : room.orphanageUser.name,
+                        targetId: memberAuth.value.toString()=='users'? room.orphanageUser.orphanageUserId : room.user.userId,
+                        targetName: memberAuth.value.toString()=='users'? room.orphanageUser.name : room.user.name,
                       );
                     },
                   );
