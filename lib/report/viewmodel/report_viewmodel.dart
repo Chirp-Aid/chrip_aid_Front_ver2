@@ -1,32 +1,43 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../model/dto/report_dto.dart';
-import '../service/report_service.dart';
+import 'package:dio/dio.dart';
+import '../model/service/report_service.dart';
+import '../model/repository/report_repository.dart';
 
-final reportViewModelProvider = Provider((ref) => ReportViewModel(ref));
+final reportViewModelProvider = Provider((ref) {
+  final dio = Dio(); // Configure Dio instance as needed
+  final repository = ReportRepository(dio);
+  return ReportViewModel(ReportService(repository));
+});
 
 class ReportViewModel {
-  final Ref ref;
-  final TextEditingController descriptionController = TextEditingController();
+  final ReportService service;
 
-  ReportViewModel(this.ref);
+  ReportViewModel(this.service);
 
-  Future<void> submitReport({
-    required int targetId,
+  Future<void> sendReport({
+    required String description,
+    required String targetId,
     required String targetName,
     required String targetType,
     required String boardType,
     required String boardContent,
   }) async {
-    final service = ref.read(reportServiceProvider);
-    final report = ReportDTO(
-      description: descriptionController.text,
-      targetId: targetId,
-      targetName: targetName,
-      targetType: targetType,
-      boardType: boardType,
-      boardContent: boardContent,
-    );
-    await service.createReport(report);
+    if (description.isEmpty) {
+      throw Exception('신고 사유를 입력하세요.');
+    }
+    try {
+      await service.reportUser(
+        description: description,
+        targetId: targetId,
+        targetName: targetName,
+        targetType: targetType,
+        boardType: boardType,
+        boardContent: boardContent,
+      );
+      print('Report successfully sent');
+    } catch (e) {
+      print('Failed to send report: $e');
+      throw e;
+    }
   }
 }

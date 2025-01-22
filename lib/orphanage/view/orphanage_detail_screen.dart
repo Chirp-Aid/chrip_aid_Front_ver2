@@ -52,7 +52,7 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
             ? Icons.shopping_cart
             : Icons.edit_document;
         tabColor =
-            tabController.index == 0 ? Colors.white : CustomColor.mainColor;
+        tabController.index == 0 ? Colors.white : CustomColor.mainColor;
         tabTextColor = tabController.index == 0 ? Colors.black : Colors.white;
       });
     });
@@ -261,10 +261,12 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
                           onPressed: () {
                             viewModel.goToReportPage(
                               context,
-                              orphanageId: widget.orphanageId,
-                              orphanageName: viewModel.orphanageDetailState.value?.orphanageName ?? '',
-                              description: viewModel.orphanageDetailState.value?.description ?? '',
-                              boardType: 'orphanage',
+                              description: state.value!.description,
+                              targetId: widget.orphanageId.toString(),
+                              targetName: state.value!.orphanageName,
+                              targetType: 'ORPHANAGE_USER',
+                              boardType: 'ORPHANAGE',
+                              boardContent: state.value!.description,
                             );
                           },
                         ),
@@ -291,9 +293,9 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
                         ),
                         tabs: tabs
                             .map((e) => SizedBox(
-                                  height: 40.0,
-                                  child: Center(child: Text(TABS[e % 2].label)),
-                                ))
+                          height: 40.0,
+                          child: Center(child: Text(TABS[e % 2].label)),
+                        ))
                             .toList(),
                       ),
                       SizedBox(
@@ -308,7 +310,7 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
                                   itemCount: state.value!.requests!.length,
                                   itemBuilder: (context, index) {
                                     final item =
-                                        state.value!.requests![index];
+                                    state.value!.requests![index];
                                     return CustomProductBox(
                                       requiredId: item.requestId,
                                       photo: item.productPhoto,
@@ -318,7 +320,7 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
                                       requestCount: item.requestCount,
                                       supportCount: item.supportCount,
                                       progress:
-                                          item.supportCount / item.requestCount,
+                                      item.supportCount / item.requestCount,
                                     );
                                   },
                                   padding: const EdgeInsets.only(bottom: 100),

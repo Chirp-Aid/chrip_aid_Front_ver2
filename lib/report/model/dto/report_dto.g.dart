@@ -8,7 +8,7 @@ part of 'report_dto.dart';
 
 ReportDTO _$ReportDTOFromJson(Map<String, dynamic> json) => ReportDTO(
       description: json['description'] as String,
-      targetId: (json['target_id'] as num).toInt(),
+      targetId: json['target_id'] as String,
       targetName: json['target_name'] as String,
       targetType: json['target_type'] as String,
       boardType: json['board_type'] as String,

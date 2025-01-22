@@ -111,7 +111,7 @@ class CustomReservationBox extends StatelessWidget {
                         thickness: 1.0,
                       ),
                     ),
-                    ReasonBox(reason: rejectReason!, title: "거절 사유"),
+                    ReasonBox(reason: rejectReason ?? "", title: "거절 사유"),
                   ],
                 )
               : Container(),

@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 
-class NoticeViewModel extends ChangeNotifier {
+class OrphanageNoticeViewModel extends ChangeNotifier {
+  bool isTaxBenefitChecked = false;
   bool isDonationChecked = false;
   bool isPersonalInfoChecked = false;
-  bool isTaxBenefitChecked = false;
   bool isContactInfoChecked = false;
 
   bool get isAllChecked =>
-      isDonationChecked &&
+      isTaxBenefitChecked &&
+          isDonationChecked &&
           isPersonalInfoChecked &&
-          isTaxBenefitChecked &&
           isContactInfoChecked;
+
+  void updateTaxBenefitChecked(bool value) {
+    isTaxBenefitChecked = value;
+    notifyListeners();
+  }
 
   void updateDonationChecked(bool value) {
     isDonationChecked = value;
@@ -19,11 +24,6 @@ class NoticeViewModel extends ChangeNotifier {
 
   void updatePersonalInfoChecked(bool value) {
     isPersonalInfoChecked = value;
-    notifyListeners();
-  }
-
-  void updateTaxBenefitChecked(bool value) {
-    isTaxBenefitChecked = value;
     notifyListeners();
   }
 
