@@ -6,7 +6,7 @@ part of 'report_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ReportDTO _$ReportDTOFromJson(Map<String, dynamic> json) => ReportDTO(
+ReportDto _$ReportDtoFromJson(Map<String, dynamic> json) => ReportDto(
       description: json['description'] as String,
       targetId: json['target_id'] as String,
       targetName: json['target_name'] as String,
@@ -15,7 +15,7 @@ ReportDTO _$ReportDTOFromJson(Map<String, dynamic> json) => ReportDTO(
       boardContent: json['board_content'] as String,
     );
 
-Map<String, dynamic> _$ReportDTOToJson(ReportDTO instance) => <String, dynamic>{
+Map<String, dynamic> _$ReportDtoToJson(ReportDto instance) => <String, dynamic>{
       'description': instance.description,
       'target_id': instance.targetId,
       'target_name': instance.targetName,

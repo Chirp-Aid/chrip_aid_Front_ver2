@@ -1,43 +1,33 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dio/dio.dart';
-import '../model/service/report_service.dart';
-import '../model/repository/report_repository.dart';
-
-final reportViewModelProvider = Provider((ref) {
-  final dio = Dio(); // Configure Dio instance as needed
-  final repository = ReportRepository(dio);
-  return ReportViewModel(ReportService(repository));
-});
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ReportViewModel {
-  final ReportService service;
-
-  ReportViewModel(this.service);
-
-  Future<void> sendReport({
+  Future<void> submitReport({
+    required Map<String, String> reportData,
     required String description,
-    required String targetId,
-    required String targetName,
-    required String targetType,
-    required String boardType,
-    required String boardContent,
   }) async {
-    if (description.isEmpty) {
-      throw Exception('신고 사유를 입력하세요.');
-    }
+    final reportBody = {
+      ...reportData,
+      'description': description,
+    };
+
     try {
-      await service.reportUser(
-        description: description,
-        targetId: targetId,
-        targetName: targetName,
-        targetType: targetType,
-        boardType: boardType,
-        boardContent: boardContent,
+      final response = await http.post(
+        Uri.parse('http://3.34.17.191:3000/reports'),
+        headers: {
+          'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(reportBody),
       );
-      print('Report successfully sent');
+
+      if (response.statusCode == 200) {
+        print('Report submitted successfully');
+      } else {
+        print('Failed to submit report: ${response.body}');
+      }
     } catch (e) {
-      print('Failed to send report: $e');
-      throw e;
+      print('Error submitting report: $e');
     }
   }
 }

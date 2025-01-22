@@ -1,31 +1,17 @@
-import '../repository/report_repository.dart';
+import 'package:chrip_aid/report/model/repository/report_repository.dart';
+import 'package:chrip_aid/report/model/dto/report_dto.dart';
 
 class ReportService {
-  final ReportRepository repository;
+  final ReportRepository reportRepository;
 
-  ReportService(this.repository);
+  ReportService(this.reportRepository);
 
-  Future<void> reportUser({
-    required String description,
-    required String targetId,
-    required String targetName,
-    required String targetType,
-    required String boardType,
-    required String boardContent,
-  }) async {
-    final reportData = {
-      'description': description,
-      'target_id': targetId,
-      'target_name': targetName,
-      'target_type': targetType,
-      'board_type': boardType,
-      'board_content': boardContent,
-    };
-    print('Request Data: $reportData');
+  Future<void> submitReport(ReportDto reportDto) async {
     try {
-      await repository.reportUser(reportData);
+      await reportRepository.submitReport(reportDto);
+      print('신고가 성공적으로 접수되었습니다.');
     } catch (e) {
-      print('Error reporting user: $e');
+      print('신고 접수 중 에러 발생: $e');
       rethrow;
     }
   }

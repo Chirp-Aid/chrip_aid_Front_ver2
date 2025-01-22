@@ -1,7 +1,7 @@
+// report_repository.dart
+import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:dio/dio.dart' hide Headers;
-import 'package:retrofit/error_logger.dart';
-import 'package:retrofit/http.dart';
+import 'package:chrip_aid/report/model/dto/report_dto.dart';
 
 part 'report_repository.g.dart';
 
@@ -10,6 +10,5 @@ abstract class ReportRepository {
   factory ReportRepository(Dio dio, {String? baseUrl}) = _ReportRepository;
 
   @POST('/reports')
-  @Headers({'accessToken': 'true'})
-  Future<void> reportUser(@Body() Map<String, dynamic> reportData);
+  Future<void> submitReport(@Body() ReportDto reportDto);
 }

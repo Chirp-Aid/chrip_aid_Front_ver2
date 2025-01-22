@@ -261,7 +261,6 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
                           onPressed: () {
                             viewModel.goToReportPage(
                               context,
-                              description: state.value!.description,
                               targetId: widget.orphanageId.toString(),
                               targetName: state.value!.orphanageName,
                               targetType: 'ORPHANAGE_USER',

@@ -3,26 +3,20 @@ import 'package:json_annotation/json_annotation.dart';
 part 'report_dto.g.dart';
 
 @JsonSerializable()
-class ReportDTO {
-  @JsonKey(name: 'description') // 신고 사유
-  final String description;
+class ReportDto {
+  String description;
+  @JsonKey(name: 'target_id')
+  String targetId;
+  @JsonKey(name: 'target_name')
+  String targetName;
+  @JsonKey(name: 'target_type')
+  String targetType;
+  @JsonKey(name: 'board_type')
+  String boardType;
+  @JsonKey(name: 'board_content')
+  String boardContent;
 
-  @JsonKey(name: 'target_id') // 대상 ID
-  final String targetId;
-
-  @JsonKey(name: 'target_name') // 대상 이름
-  final String targetName;
-
-  @JsonKey(name: 'target_type') // 대상 유형
-  final String targetType;
-
-  @JsonKey(name: 'board_type') // 게시판 유형
-  final String boardType;
-
-  @JsonKey(name: 'board_content') // 게시판 내용
-  final String boardContent;
-
-  ReportDTO({
+  ReportDto({
     required this.description,
     required this.targetId,
     required this.targetName,
@@ -31,20 +25,8 @@ class ReportDTO {
     required this.boardContent,
   });
 
-  // JSON 직렬화 및 역직렬화 메서드
-  factory ReportDTO.fromJson(Map<String, dynamic> json) =>
-      _$ReportDTOFromJson(json);
+  Map<String, dynamic> toJson() => _$ReportDtoToJson(this);
 
-  Map<String, dynamic> toJson() => _$ReportDTOToJson(this);
-
-  ReportDTO toDto() {
-    return ReportDTO(
-      description: description,
-      targetId: targetId,
-      targetName: targetName,
-      targetType: targetType,
-      boardType: boardType,
-      boardContent: boardContent,
-    );
-  }
+  factory ReportDto.fromJson(Map<String, dynamic> json) =>
+      _$ReportDtoFromJson(json);
 }

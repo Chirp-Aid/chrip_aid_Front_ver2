@@ -57,20 +57,17 @@ class OrphanageDetailViewModel {
       postVisitReservation(orphanageDetailState.value!.orphanageId);
     }
   }
-
   void goToReportPage(
       BuildContext context, {
-        required String description,
         required String targetId,
         required String targetName,
         required String targetType,
         required String boardType,
         required String boardContent,
       }) {
-    context.pushNamed(
+    context.push(
       ReportScreen.routeName,
       extra: {
-        'description': description,
         'targetId': targetId,
         'targetName': targetName,
         'targetType': targetType,

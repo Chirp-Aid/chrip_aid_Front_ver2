@@ -380,16 +380,20 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       GoRoute(
         path: '/report',
-        name: ReportScreen.routeName,
+        name: 'ReportScreen',
         builder: (context, state) {
-          final args = state.extra as Map<String, dynamic>? ?? {};
-          return ReportScreen(
-            targetId: args['targetId'] as String,
-            targetName: args['targetName'] as String,
-            targetType: args['targetType'] as String,
-            boardType: args['boardType'] as String,
-            boardContent: args['boardContent'] as String,
-          );
+          final extra = state.extra as Map<String, String>?;
+
+          if (extra == null ||
+              !extra.containsKey('targetId') ||
+              !extra.containsKey('targetName') ||
+              !extra.containsKey('targetType') ||
+              !extra.containsKey('boardType') ||
+              !extra.containsKey('boardContent')) {
+            throw Exception('ReportScreen requires valid extra parameters: '
+                'targetId, targetName, targetType, boardType, boardContent.');
+          }
+          return ReportScreen(reportData: extra);
         },
       ),
     ],
