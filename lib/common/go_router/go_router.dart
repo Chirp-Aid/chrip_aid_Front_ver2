@@ -121,6 +121,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     return OrphanageDetailScreen(
                   orphanageUserId: orphanage.orphanageUserId as String,
                   orphanageId: orphanage.orphanageId,
+                  orphanageName : orphanage.orphanageName,
                 );
                     },
                 routes: [

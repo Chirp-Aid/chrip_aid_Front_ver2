@@ -91,8 +91,11 @@ class SocketService {
     print("Socket is not connected. Unable to send message.");
     return;
   }
-    socket!.on('roomCreated', (data) {
-      callback(data['room_id']);
+    socket!.on('createRoom', (data) {
+      print('data : $data');
+      final roomId = data['chat_room_id'];
+      print('roomId : $roomId');
+      callback(roomId);
     });
   }
 
