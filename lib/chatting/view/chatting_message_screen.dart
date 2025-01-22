@@ -30,12 +30,14 @@ class ChattingMessageScreen extends ConsumerStatefulWidget {
 class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
   late final SocketService _socketService;
   late final MemberInfoService memberInfoService;
+  late final ScrollController _scrollController; // ScrollController 추가
   String userName = '';
 
   @override
   void initState() {
     super.initState();
 
+    _scrollController = ScrollController(); // ScrollController 초기화
     memberInfoService = ref.read(memberInfoServiceProvider);
 
     _fetchUserInfo();
@@ -53,6 +55,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     } catch (e) {
       print("Error fetching member info: $e");
     }
+    _scrollToBottom();
   }
 
   Future<void> _initializeSocketAndJoinRoom() async {
@@ -81,6 +84,27 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
       final List<Map<String, dynamic>> messages =
       List<Map<String, dynamic>>.from(data);
       ref.read(chatMessagesProvider.notifier).addMessages(messages);
+
+      // 메시지 추가 후 스크롤을 가장 아래로 이동
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
+      });
+      _scrollToBottom();
+    });
+  }
+
+  /// 스크롤을 가장 아래로 이동
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
@@ -90,6 +114,8 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     _socketService.onNewMessage((message) {
       print("New message received: $message");
       ref.read(chatMessagesProvider.notifier).addMessage(message); // 메시지 추가
+
+      _scrollToBottom();
     });
 
     _socketService.socket?.on('roomMessages', (data) {
@@ -97,11 +123,14 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
       final List<Map<String, dynamic>> messages =
       List<Map<String, dynamic>>.from(data);
       ref.read(chatMessagesProvider.notifier).addMessages(messages); // 여러 메시지 추가
+
+      _scrollToBottom();
     });
   }
 
   @override
   void dispose() {
+    _scrollController.dispose(); // ScrollController 해제
     _socketService.leaveRoom(widget.chatRoomId);
     _socketService.disconnect();
     super.dispose();
@@ -122,6 +151,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _scrollController, // ScrollController 연결
               padding: const EdgeInsets.all(16.0),
               itemCount: messages.length,
               itemBuilder: (context, index) {
@@ -135,6 +165,7 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
             chatRoomId: widget.chatRoomId,
             socketService: _socketService,
             userName: userName,
+            scrollController: _scrollController, // ScrollController 전달
           ),
         ],
       ),
@@ -166,12 +197,14 @@ class _BottomInputField extends ConsumerWidget {
   final String chatRoomId;
   final SocketService socketService;
   final String userName;
+  final ScrollController scrollController; // ScrollController 추가
 
   const _BottomInputField({
     Key? key,
     required this.chatRoomId,
     required this.socketService,
     required this.userName,
+    required this.scrollController,
   }) : super(key: key);
 
   @override
@@ -193,6 +226,16 @@ class _BottomInputField extends ConsumerWidget {
 
         // 입력 필드 초기화
         _controller.clear();
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
       }
     }
 
