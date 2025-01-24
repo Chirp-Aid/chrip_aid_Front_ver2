@@ -8,7 +8,6 @@ class ReportService {
 
   Future<void> submitReport(ReportDto reportDto) async {
     try {
-      print('Request Headers: {"accessToken": "true"}');
       print('Request Body: ${reportDto.toJson()}');
 
       await reportRepository.submitReport(reportDto);
