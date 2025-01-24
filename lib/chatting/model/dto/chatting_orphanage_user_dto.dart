@@ -12,11 +12,14 @@ class ChattingOrphanageUserDto {
 
   final String name;
   final String email;
+  @JsonKey(name: 'orphanage_name')
+  final String orphanageName;
 
   ChattingOrphanageUserDto({
     required this.orphanageUserId,
     required this.name,
     required this.email,
+    required this.orphanageName,
   });
 
   factory ChattingOrphanageUserDto.fromJson(Map<String, dynamic> json) =>
@@ -28,6 +31,7 @@ class ChattingOrphanageUserDto {
       orphanageUserId: orphanageUserId,
       name: name,
       email: email,
+      orphanageName: orphanageName
     );
   }
 }

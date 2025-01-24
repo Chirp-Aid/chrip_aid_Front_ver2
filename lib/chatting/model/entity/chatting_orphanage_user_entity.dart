@@ -8,11 +8,13 @@ class ChattingOrphanageUserEntity {
   final String orphanageUserId;
   final String name;
   final String email;
+  final String orphanageName;
 
   ChattingOrphanageUserEntity({
     required this.orphanageUserId,
     required this.name,
     required this.email,
+    required this.orphanageName
   });
 
   factory ChattingOrphanageUserEntity.fromJson(Map<String, dynamic> json) =>

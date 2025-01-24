@@ -12,6 +12,7 @@ ChattingOrphanageUserDto _$ChattingOrphanageUserDtoFromJson(
       orphanageUserId: json['orphanage_user_id'] as String,
       name: json['name'] as String,
       email: json['email'] as String,
+      orphanageName: json['orphanage_name'] as String,
     );
 
 Map<String, dynamic> _$ChattingOrphanageUserDtoToJson(
@@ -20,4 +21,5 @@ Map<String, dynamic> _$ChattingOrphanageUserDtoToJson(
       'orphanage_user_id': instance.orphanageUserId,
       'name': instance.name,
       'email': instance.email,
+      'orphanage_name': instance.orphanageName,
     };

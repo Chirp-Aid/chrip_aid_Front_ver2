@@ -1,7 +1,6 @@
 import 'package:chrip_aid/auth/model/service/auth_service.dart';
 import 'package:chrip_aid/common/styles/styles.dart';
 import 'package:chrip_aid/common/value_state/component/value_state_listener.dart';
-import 'package:chrip_aid/member/model/entity/member_entity.dart';
 import 'package:chrip_aid/member/model/service/member_info_service.dart';
 import 'package:chrip_aid/orphanage/component/custom_date_picker.dart';
 import 'package:chrip_aid/orphanage/component/custom_product_box.dart';
@@ -20,8 +19,9 @@ class OrphanageDetailScreen extends ConsumerStatefulWidget {
   static String get routeName => 'detailPage';
   final int orphanageId;
   final String orphanageUserId;
+  final String orphanageName;
 
-  const OrphanageDetailScreen({super.key, required this.orphanageId, required this.orphanageUserId});
+  const OrphanageDetailScreen({super.key, required this.orphanageId, required this.orphanageUserId, required this.orphanageName});
 
   @override
   ConsumerState<OrphanageDetailScreen> createState() =>
@@ -96,8 +96,8 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
 
         // Navigate to the chat room
         context.push(
-          '/chatting',
-          extra: {'roomId': roomId},
+          '/chatting/$roomId',
+          extra: {'roomId': roomId, 'targetId':widget.orphanageUserId, 'targetName':widget.orphanageName},
         );
 
         // After navigation, disconnect the socket
@@ -128,13 +128,6 @@ class _OrphanageDetailPageState extends ConsumerState<OrphanageDetailScreen>
     } catch (e) {
       print("Error fetching member info: $e");
     }
-  }
-
-  void _navigateToChatRoom(String roomId) {
-    context.push(
-      '/chatting',
-      extra: {'roomId': roomId},
-    );
   }
 
 
