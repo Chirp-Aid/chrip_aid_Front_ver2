@@ -6,6 +6,8 @@ import 'package:chrip_aid/orphanage/layout/detail_page_layout.dart';
 import '../../auth/model/state/authority_state.dart';
 import '../model/notifier/chat_message_notifier.dart';
 import '../model/service/socket_service.dart';
+import 'package:go_router/go_router.dart';
+import 'package:chrip_aid/report/view/report_screen.dart';
 
 class ChattingMessageScreen extends ConsumerStatefulWidget {
   final String chatRoomId;
@@ -157,7 +159,12 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
               itemBuilder: (context, index) {
                 final message = messages[index];
                 final isSentByMe = message['sender'] == userName;
-                return _buildChatBubble(isSentByMe, message['content']);
+                return _buildChatBubble(
+                  context,
+                  isSentByMe,
+                  message['content'],
+                  message['sender'],
+                );
               },
             ),
           ),
@@ -172,23 +179,74 @@ class _ChattingMessageScreenState extends ConsumerState<ChattingMessageScreen> {
     );
   }
 
-  Widget _buildChatBubble(bool isSentByMe, String message) {
-    return Align(
-      alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 12.0),
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-        decoration: BoxDecoration(
-          color: isSentByMe ? CustomColor.itemMainColor : Colors.grey[200],
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: isSentByMe ? Colors.white : Colors.black87,
+  Widget _buildChatBubble(
+      BuildContext context,
+      bool isSentByMe,
+      String messageContent,
+      String sender,
+      ) {
+    return GestureDetector(
+      onLongPress: () {
+        if (!isSentByMe) {
+          _showReportDialog(context, messageContent, sender);
+        }
+      },
+      child: Align(
+        alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+          decoration: BoxDecoration(
+            color: isSentByMe ? Colors.green[200] : Colors.grey[300],
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Text(
+            messageContent,
+            style: TextStyle(color: isSentByMe ? Colors.white : Colors.black),
           ),
         ),
       ),
+    );
+  }
+
+  void _showReportDialog(
+      BuildContext context, String messageContent, String sender) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("신고하기"),
+        content: const Text("해당 메시지를 신고하시겠습니까?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("취소"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _navigateToReportPage(context, messageContent, sender);
+            },
+            child: const Text(
+              "신고",
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToReportPage(
+      BuildContext context, String messageContent, String sender) {
+    context.push(
+      ReportScreen.routeName,
+      extra: {
+        'targetId': sender,
+        'targetName': sender,
+        'targetType': 'CHAT',
+        'boardType': 'CHAT',
+        'boardContent': messageContent,
+      },
     );
   }
 }
