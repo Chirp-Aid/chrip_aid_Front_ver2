@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomReportList extends StatelessWidget {
   final String title; // 제목 또는 신고 내용
   final String reporterName; // 신고자 이름
-  final String targetName; // 피신고자 이름 또는 대상 이름\
+  final String targetName; // 피신고자 이름 또는 대상 이름
   final String description;
   final String content;
   final VoidCallback onTap; // 카드 클릭 시 동작
@@ -23,7 +23,7 @@ class CustomReportList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){},
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16.0),
         margin: const EdgeInsets.all(8.0),
@@ -79,19 +79,25 @@ class CustomReportList extends StatelessWidget {
             ),
             const SizedBox(width: 8.0),
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // 공간을 균등 배치
               children: [
-                Text(
-                  targetName,
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.red,
+                SizedBox(
+                  width: 100.0, // 고정된 너비
+                  child: Text(
+                    targetName,
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.red,
+                      overflow: TextOverflow.ellipsis, // 길면 말줄임표 처리
+                    ),
+                    maxLines: 1, // 한 줄로 제한
                   ),
                 ),
                 const SizedBox(height: 8.0),
                 IconButton(
                   color: Colors.red,
                   onPressed: onDelete,
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                 ),
               ],
             ),
