@@ -25,7 +25,8 @@ class _ReportRepository implements ReportRepository {
   Future<void> submitReport(ReportDto reportDto) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(reportDto.toJson());
     final _options = _setStreamType<void>(Options(

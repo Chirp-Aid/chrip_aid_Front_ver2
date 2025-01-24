@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../viewmodel/report_viewmodel.dart';
+import '../model/service/report_service.dart';
+import '../model/repository/report_repository.dart';
+import 'package:dio/dio.dart';
 
-class ReportScreen extends StatelessWidget {
+class ReportScreen extends StatefulWidget {
   static const routeName = '/report';
 
   final Map<String, String> reportData;
@@ -9,10 +12,30 @@ class ReportScreen extends StatelessWidget {
   const ReportScreen({super.key, required this.reportData});
 
   @override
-  Widget build(BuildContext context) {
-    final descriptionController = TextEditingController();
-    final reportViewModel = ReportViewModel();
+  _ReportScreenState createState() => _ReportScreenState();
+}
 
+class _ReportScreenState extends State<ReportScreen> {
+  late final ReportViewModel reportViewModel;
+  final TextEditingController descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final dio = Dio(); // Dio 인스턴스 생성
+    final repository = ReportRepository(dio);
+    final service = ReportService(repository);
+    reportViewModel = ReportViewModel(service);
+  }
+
+  @override
+  void dispose() {
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('신고하기')),
       body: Padding(
@@ -20,11 +43,11 @@ class ReportScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Target ID: ${reportData['targetId']}'),
-            Text('Target Name: ${reportData['targetName']}'),
-            Text('Target Type: ${reportData['targetType']}'),
-            Text('Board Type: ${reportData['boardType']}'),
-            Text('Board Content: ${reportData['boardContent']}'),
+            Text('Target ID: ${widget.reportData['targetId']}'),
+            Text('Target Name: ${widget.reportData['targetName']}'),
+            Text('Target Type: ${widget.reportData['targetType']}'),
+            Text('Board Type: ${widget.reportData['boardType']}'),
+            Text('Board Content: ${widget.reportData['boardContent']}'),
             const SizedBox(height: 16.0),
             TextFormField(
               controller: descriptionController,
@@ -36,13 +59,17 @@ class ReportScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () {
-                reportViewModel.submitReport(
-                  reportData: reportData,
+              onPressed: reportViewModel.isLoading
+                  ? null
+                  : () async {
+                await reportViewModel.submitReport(
+                  reportData: widget.reportData,
                   description: descriptionController.text,
                 );
               },
-              child: const Text('Submit Report'),
+              child: reportViewModel.isLoading
+                  ? const CircularProgressIndicator()
+                  : const Text('Submit Report'),
             ),
           ],
         ),
