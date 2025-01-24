@@ -89,7 +89,7 @@ class OrphanageNoticeScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
